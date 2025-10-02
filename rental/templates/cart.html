@@ -1,0 +1,446 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'cart.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ request.user.username }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> View Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-history"></i> Order History
+                        </a>
+                        <a href="#" class="dropdown-item active">
+                            <i class="fas fa-shopping-cart"></i> View Order Cart
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Content -->
+    <div class="cart-container">
+        <div class="container">
+            <div class="section-title">
+                <h2>Your Reservation Cart</h2>
+            </div>
+            <p class="section-subtitle" style="text-align: center; max-width: 700px; margin: 0 auto 2.5rem;">
+                Review your vehicle selections below. Ready to complete your booking? Proceed to checkout to finalize your reservation.
+            </p>
+            
+            {% if cart_items %}
+            <div class="cart-content">
+               <div class="cart-items">
+    {% for item in cart_items %}
+    <div class="cart-item" data-item-id="{{ item.id }}">
+        <div class="cart-image">
+            <img src="{{ item.car.image.url }}" alt="{{ item.car.car_name }}">
+        </div>
+        <div class="cart-details">
+            <div class="cart-vehicle">
+                <h3>{{ item.car.car_name }} - {{ item.car.model_name }}</h3>
+                <span class="cart-vehicle-type">{{ item.car.get_car_type_display }}</span>
+            </div>
+            <div class="cart-dates">
+                <div class="cart-pickup">
+                    <strong>Pickup:</strong> {{ item.pickup_date|date:"M d, Y" }} - 9:00 AM
+                    <div class="cart-location">
+                        <i class="fas fa-map-marker-alt"></i> {{ item.location }}
+                    </div>
+                </div>
+                <div class="cart-return">
+                    <strong>Return:</strong> {{ item.return_date|date:"M d, Y" }} - 3:00 PM
+                    <div class="cart-location">
+                        <i class="fas fa-map-marker-alt"></i> {{ item.location }}
+                    </div>
+                </div>
+            </div>
+            <div class="cart-actions">
+                <button class="cart-action-btn edit-btn" data-item-id="{{ item.id }}">
+                    <i class="fas fa-edit"></i> Modify
+                </button>
+                <button class="cart-action-btn remove-btn" data-item-id="{{ item.id }}">
+                    <i class="fas fa-trash-alt"></i> Remove
+                </button>
+            </div>
+        </div>
+     
+ 
+
+                        <div class="cart-price">
+                            <div class="cart-total">₹{{ item.total_price }}</div>
+                            <div class="cart-price-breakdown">
+                                <div class="price-row">
+                                    <span>₹{{ item.car.current_price }}/day × {{ item.days }} days</span>
+                                    <span>₹{{ item.subtotal }}</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Tax (8.875%)</span>
+                                    <span>₹{{ item.tax|floatformat:2 }}</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Service Fee</span>
+                                    <span>₹25.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="cart-summary">
+                    <h3>Reservation Summary</h3>
+                    
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Subtotal ({{ cart_items|length }} item{{ cart_items|pluralize }}):</span>
+                            <span>₹{{ subtotal }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (8.875%):</span>
+                            <span>₹{{ tax_total|floatformat:2 }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Service Fee:</span>
+                            <span>₹{{ service_fee_total }}</span>
+                        </div>
+                        <div class="promo-applied">
+                            {% if promo_code %}
+                                <span>Promo Code ({{ promo_code.code }} - {{ promo_code.discount_per }}%):</span>
+                                <span>-₹{{ discount_amount|floatformat:2 }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="summary-total">
+                            <span>Total:</span>
+                            <span>₹{{ grand_total }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-actions">
+                        <a href="{% url 'car_list' %}" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                        <a href="{% url 'checkout' %}" class="btn btn-accent">
+                            Proceed to Checkout <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="cart-promo">
+                        <h4>Have a promo code?</h4>
+                        <div class="promo-form">
+                            <input type="text" class="form-control" placeholder="Enter promo code">
+                            <button class="btn" style="height: 48px; margin-left: 0.5rem;">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-recommendations">
+                <div class="section-title">
+                    <h2>You Might Also Need</h2>
+                </div>
+                
+                <div class="recommendations-grid">
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <h3>Child Safety Seats</h3>
+                        <p>Ensure your little ones travel safely with our certified child seats.</p>
+                       
+                        
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-suitcase-rolling"></i>
+                        </div>
+                        <h3>Roof Rack</h3>
+                        <p>Need extra cargo space? Add our sturdy roof rack for your adventure.</p>
+                        
+                    </div>
+                    
+                    <div class="recommendation-card">
+                        <div class="recommendation-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3>Premium Wi-Fi</h3>
+                        <p>Stay connected on the road with our high-speed mobile hotspot.</p>
+                       
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-cart">
+                <div class="empty-cart-content">
+                    <i class="fas fa-shopping-cart" style="font-size: 4rem; color: #cbd5e0; margin-bottom: 1.5rem;"></i>
+                    <h2>Your cart is empty</h2>
+                    <p style="max-width: 600px; margin: 0 auto 2rem; color: var(--gray);">
+                        Looks like you haven't added any vehicles to your cart yet. Browse our premium fleet and find the perfect vehicle for your next adventure.
+                    </p>
+                    <a href="{% url 'car_list' %}" class="btn">Browse Vehicles</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="cta" style="padding: 4rem 0;">
+        <div class="container">
+            <h2>Ready for Your Next Adventure?</h2>
+            <p>Join thousands of satisfied customers who trust Veloce for their car rental needs. Whether it's a weekend getaway, business trip, or special occasion, we have the perfect vehicle for you.</p>
+            <a href="{% url 'car_list' %}" class="btn">Find Your Perfect Vehicle</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+  <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'car_list'%}">Our Car</a></li>
+                        <li><a href="{% url 'service'%}">Services</a></li>
+                        <li><a href="{% url 'contact'%}">Contact </a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Gwalior Madhya Pradesh</li>
+                        <li><i class="fas fa-phone"></i> +91 231423146</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Veloce Car Rental Pratap. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Remove item functionality
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+                const cartItem = this.closest('.cart-item');
+                
+                if (confirm('Are you sure you want to remove this vehicle from your cart?')) {
+                    // In a real implementation, this would call your Django backend
+                    fetch(`/cart/remove/${itemId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Animate removal
+                            cartItem.style.opacity = '0';
+                            cartItem.style.transform = 'translateX(20px)';
+                            
+                            setTimeout(() => {
+                                cartItem.remove();
+                                
+                                // Update cart count in navigation
+                                const cartLink = document.querySelector('.dropdown-item[href$="cart/"]');
+                                if (cartLink) {
+                                    let currentText = cartLink.textContent;
+                                    let match = currentText.match(/KATEX_INLINE_OPEN(\d+)KATEX_INLINE_CLOSE/);
+                                    
+                                    if (match) {
+                                        let count = parseInt(match[1]) - 1;
+                                        if (count > 0) {
+                                            cartLink.innerHTML = cartLink.innerHTML.replace(/KATEX_INLINE_OPEN\d+KATEX_INLINE_CLOSE/, `(${count})`);
+                                        } else {
+                                            cartLink.innerHTML = cartLink.innerHTML.replace(/\sKATEX_INLINE_OPEN\d+KATEX_INLINE_CLOSE/, '');
+                                        }
+                                    }
+                                }
+                                
+                                // If cart is now empty, show empty state
+                                if (document.querySelectorAll('.cart-item').length === 0) {
+                                    window.location.reload();
+                                }
+                            }, 300);
+                        } else {
+                            alert('Failed to remove item from cart. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
+                }
+            });
+        });
+
+        // Edit item functionality
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+                // In a real implementation, this would redirect to the vehicle details page with pre-filled dates
+                alert('In a real implementation, this would take you back to the vehicle details page with your selected dates pre-filled for modification.');
+            });
+        });
+
+        // Promo code functionality
+        document.querySelector('.promo-form button').addEventListener('click', function() {
+    const promoInput = document.querySelector('.promo-form input');
+    const promoCode = promoInput.value.trim();
+
+    if (!promoCode) {
+        alert('Please enter a promo code.');
+        return;
+    }
+
+    fetch("{% url 'promocode' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            promocode: promoCode,
+            subtotal: "{{ subtotal }}"
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+    alert(`Promo applied! 🎉 Discount: ${data.discount}%`);
+
+    // Update promo row
+    let promoApplied = document.querySelector('.promo-applied');
+    promoApplied.innerHTML = `
+        <span> Discount Coupan (${promoCode} - ${data.discount}%):</span>
+        <span>-₹${(parseFloat("{{ subtotal }}") - data.new_total).toFixed(2)}</span>
+    `;
+
+    // Update total row
+    document.querySelector('.summary-total span:last-child').innerText = `₹${data.new_total}`;
+}
+else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+
+        // Helper function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

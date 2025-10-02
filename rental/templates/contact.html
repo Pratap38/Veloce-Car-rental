@@ -1,0 +1,448 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Veloce Car Rental for all your vehicle rental needs. Reach us by phone, email, or visit our office during business hours.">
+    <title>Contact Us | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'contact.css' %}">
+</head>
+<body>
+     <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> View Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-history"></i> Order History
+                        </a>
+                        <a href="{% url 'cart' %}" class="dropdown-item">
+                            <i class="fas fa-shopping-cart"></i> View Order Cart
+                        </a>
+                            <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn">Book Now</a>
+            {% endif %}
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-on-scroll">
+                <span class="subtitle">Get in Touch</span>
+                <h1>We're Here to Help</h1>
+                <p class="hero-paragraph">Have questions about our services or need assistance with your booking? Our dedicated team is ready to provide you with exceptional support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Information Section -->
+    <section class="section contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Main Contact Card -->
+                <div class="contact-card main-contact animate-on-scroll" data-delay="0.1s">
+                    <div class="card-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h2 class="card-title">24/7 Customer Support</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>Helpline Number</h3>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Customer Service</h3>
+                                <p>support@velocerentals.com</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h3>Operating Hours</h3>
+                                <p>24 hours a day, 7 days a week</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales & Booking Card -->
+                <div class="contact-card sales-contact animate-on-scroll" data-delay="0.2s">
+                    <div class="card-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h2 class="card-title">Sales & Bookings</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>Sales Hotline</h3>
+                                <p>+91 87654 32109</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Booking Inquiries</h3>
+                                <p>bookings@velocerentals.com</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Corporate Office</h3>
+                                <p>123 Auto Avenue, Mumbai, Maharashtra 400001</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HR Department Card -->
+                <div class="contact-card hr-contact animate-on-scroll" data-delay="0.3s">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2 class="card-title">Human Resources</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h3>HR Department</h3>
+                                <p>+91 76543 21098</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Career Inquiries</h3>
+                                <p>careers@velocerentals.com</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <h3>Business Hours</h3>
+                                <p>Mon-Fri: 9AM - 6PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Social Media Card -->
+                <div class="contact-card social-contact animate-on-scroll" data-delay="0.4s">
+                    <div class="card-icon">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <h2 class="card-title">Connect With Us</h2>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <h3>WhatsApp Support</h3>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>facebook.com/velocerentals</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-instagram"></i>
+                                <span>@velocerentals</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                                <span>@velocerentals</span>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-linkedin-in"></i>
+                                <span>linkedin.com/company/velocerentals</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Office Locations -->
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Our Presence</span>
+                <h2 class="section-title">Office Locations</h2>
+                <p>We serve customers across 15 major cities in India. Visit any of our conveniently located offices.</p>
+            </div>
+            
+            <div class="locations-grid">
+                <div class="location-card animate-on-scroll" data-delay="0.1s">
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Mumbai (Headquarters)</h3>
+                    <p class="address">123 Auto Avenue, Bandra Kurla Complex,<br>Mumbai, Maharashtra 400051</p>
+                    <p class="hours"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</p>
+                    <a href="#" class="directions-link">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+                
+                <div class="location-card animate-on-scroll" data-delay="0.2s">
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Delhi</h3>
+                    <p class="address">456 Vehicle Lane, Connaught Place,<br>New Delhi, Delhi 110001</p>
+                    <p class="hours"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</p>
+                    <a href="#" class="directions-link">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+                
+                <div class="location-card animate-on-scroll" data-delay="0.3s">
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Bangalore</h3>
+                    <p class="address">789 Drive Street, Koramangala,<br>Bangalore, Karnataka 560034</p>
+                    <p class="hours"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</p>
+                    <a href="#" class="directions-link">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+                
+                <div class="location-card animate-on-scroll" data-delay="0.4s">
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Hyderabad</h3>
+                    <p class="address">101 Road Avenue, Jubilee Hills,<br>Hyderabad, Telangana 500033</p>
+                    <p class="hours"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</p>
+                    <a href="#" class="directions-link">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Frequently Asked</span>
+                <h2 class="section-title">Questions & Answers</h2>
+                <p>Find quick answers to common questions about our services and policies.</p>
+            </div>
+            
+            <div class="faq-grid">
+                <div class="faq-item animate-on-scroll" data-delay="0.1s">
+                    <div class="faq-question">
+                        <h3>What documents do I need to rent a car?</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To rent a vehicle, you'll need a valid driver's license, government-issued photo ID (Aadhaar card, passport, or voter ID), and a security deposit payment method. International customers need an International Driving Permit along with their home country license.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-on-scroll" data-delay="0.2s">
+                    <div class="faq-question">
+                        <h3>What is your cancellation policy?</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We offer free cancellation up to 48 hours before your scheduled pickup time. Cancellations within 48 hours incur a 25% fee of the total booking amount. No-shows will be charged the full booking amount.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-on-scroll" data-delay="0.3s">
+                    <div class="faq-question">
+                        <h3>Do you offer one-way rentals?</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer one-way rentals between major cities. Additional charges may apply based on distance and vehicle type. Please contact our booking department for specific pricing on one-way rentals.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item animate-on-scroll" data-delay="0.4s">
+                    <div class="faq-question">
+                        <h3>What is included in the rental price?</h3>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our rental price includes the vehicle, basic insurance, roadside assistance, and 24/7 customer support. Additional services like GPS, child seats, and additional insurance coverage are available at extra cost.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content animate-on-scroll">
+                <h2>Ready to Hit the Road?</h2>
+                <p>Book your perfect vehicle in just a few clicks. Our team is ready to help you find the ideal car for your journey.</p>
+                <a href="/fleet" class="btn">Explore Our Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce Rentals</h3>
+                    <p>Premium car rental service providing exceptional vehicles and customer service since 2010.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="/">Home</a>
+                        <a href="/fleet">Fleet</a>
+                        <a href="/services">How It Works</a>
+                        <a href="/about">About Us</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <div class="footer-links">
+                        <a href="#">Airport Transfers</a>
+                        <a href="#">Long-term Rentals</a>
+                        <a href="#">Luxury Rentals</a>
+                        <a href="#">Corporate Accounts</a>
+                        <a href="#">One-way Rentals</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-map-marker-alt"></i> 123 Auto Avenue, Mumbai</a>
+                        <a href="#"><i class="fas fa-phone"></i> +91 98765 43210</a>
+                        <a href="#"><i class="fas fa-envelope"></i> info@velocerentals.com</a>
+                        <a href="#"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rentals. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-delay') || '0s';
+                        entry.target.style.transitionDelay = delay;
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // FAQ accordion functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    const answer = question.nextElementSibling;
+                    const icon = question.querySelector('.toggle-icon');
+                    
+                    // Toggle current item
+                    if (faqItem.classList.contains('active')) {
+                        faqItem.classList.remove('active');
+                        answer.style.maxHeight = null;
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        // Close all other items
+                        document.querySelectorAll('.faq-item.active').forEach(item => {
+                            item.classList.remove('active');
+                            item.querySelector('.faq-answer').style.maxHeight = null;
+                            item.querySelector('.toggle-icon')
+                                .classList.replace('fa-chevron-up', 'fa-chevron-down');
+                        });
+                        
+                        // Open current item
+                        faqItem.classList.add('active');
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

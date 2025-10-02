@@ -1,0 +1,713 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'service.css'%}">
+
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+           <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                  <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            
+            <!-- Profile Section -->
+         
+    </header>
+
+    <!-- Hero Section -->
+    <section class="section" style="padding-top: 6rem; padding-bottom: 3rem;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Services</h2>
+            </div>
+            <div class="section-subtitle">
+                At Veloce, we offer a comprehensive range of car rental services tailored to meet your specific needs. Whether you're traveling for business, planning a family vacation, or celebrating a special occasion, we have the perfect solution for you.
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="#services" class="btn" style="margin-right: 1rem;">Explore Services</a>
+                <a href="{% url 'car_list'%}" class="btn btn-outline">Browse Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Services -->
+    <section class="section" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Core Rental Services</h2>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Airport Rentals</h3>
+                        <div class="service-features">
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Meet & Greet service at all major airports</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Express pickup and drop-off</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Free shuttle service to rental counters</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>24/7 support at airport locations</span>
+                            </div>
+                        </div>
+                        <div class="service-price">From Rs.39/day</div>
+                        <a href="{% url 'aeroplane_detail'%}" class="btn" style="width: 100%;">More Details</a>
+                    </div>
+                </div>
+                
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Long-Term Leasing</h3>
+                        <div class="service-features">
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Flexible terms from 1 month to 2 years</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Free maintenance and servicing</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Mileage packages to suit your needs</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Dedicated account manager</span>
+                            </div>
+                        </div>
+                        <div class="service-price">From Rs.299/month</div>
+                        <a href="#" class="btn" style="width: 100%;">Get Quote</a>
+                    </div>
+                </div>
+                
+                <div class="service-card animate-on-scroll">
+                    <div class="service-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Luxury Experience</h3>
+                        <div class="service-features">
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Premium luxury and sports vehicles</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Concierge service for special requests</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Personal driver option available</span>
+                            </div>
+                            <div class="service-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Special event delivery</span>
+                            </div>
+                        </div>
+                        <div class="service-price">From Rs.199/day</div>
+                        <a href="{% url 'luxury'%}" class="btn" style="width: 100%;">Explore Luxury</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Categories -->
+    <section class="service-categories">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 1.5rem;">
+                <h2>Specialized Service Packages</h2>
+            </div>
+            <p class="section-subtitle" style="max-width: 700px; margin: 0 auto 2rem;">
+                We offer specialized packages designed for specific travel needs. Select a category to explore our tailored solutions.
+            </p>
+            
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="family">Family Travel</div>
+                <div class="category-tab" data-category="business">Business Travel</div>
+                <div class="category-tab" data-category="roadtrip">Road Trips</div>
+                <div class="category-tab" data-category="special">Special Occasions</div>
+            </div>
+            
+            <div class="category-content active" id="category-family">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <h3><i class="fas fa-users"></i> Family Van Package</h3>
+                        <p>Ideal for family vacations and group travel with ample space and comfort for everyone.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> 7-8 seat capacity
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Child seat installation
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> GPS navigation system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Unlimited mileage option
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Contact Us for Getting the package
+                            </div>
+
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Rs.890/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-suitcase-rolling"></i> Vacation Bundle</h3>
+                        <p>Complete vacation solution including vehicle, GPS, and travel accessories.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> SUV or minivan options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Roof rack & cargo box
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Portable cooler included
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Emergency roadside kit
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Contact Us for Getting the package
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Rs.12900/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-baby"></i> Family Protection Package</h3>
+                        <p>Comprehensive safety and convenience features for stress-free family travel.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Premium insurance coverage
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Multiple child seat options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Tablet entertainment system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Stroller & booster seat rental
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Contact Us for Getting the package
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Rs.4500/add-on</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="category-business">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <h3><i class="fas fa-briefcase"></i> Executive Business Package</h3>
+                        <p>Professional transportation solution for business travelers with premium amenities.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Luxury sedan or SUV
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Wi-Fi hotspot included
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Express checkout option
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Priority airport service
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$149/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-building"></i> Corporate Fleet Program</h3>
+                        <p>Tailored solutions for businesses with multiple employees requiring regular vehicle access.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Volume discount pricing
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Dedicated account management
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Central billing system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Custom reporting options
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Custom Quote</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-globe-americas"></i> International Business Travel</h3>
+                        <p>Seamless vehicle rental solutions across our global network of locations.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Worldwide coverage
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Multi-language support
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> International driver's license accepted
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Currency conversion assistance
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Varies by Location</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="category-roadtrip">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <h3><i class="fas fa-route"></i> Cross-Country Adventure</h3>
+                        <p>Perfect for epic road trips across the country with everything you need for the journey.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Unlimited mileage
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> GPS navigation system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Emergency roadside assistance
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> National park guidebook
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$99/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-mountain"></i> Mountain Explorer</h3>
+                        <p>Specialized vehicles and equipment for mountain and off-road adventures.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> 4WD/AWD vehicles
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> All-terrain tires
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Roof rack system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Emergency satellite communicator
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$139/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-cocktail"></i> Coastal Cruise Package</h3>
+                        <p>Enjoy the scenic coastal routes with our specially designed convertible and luxury vehicles.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Convertible options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Premium sound system
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Beach gear package
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Scenic route guide
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$179/day</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category-content" id="category-special">
+                <div class="category-grid">
+                    <div class="category-item">
+                        <h3><i class="fas fa-glass-cheers"></i> Wedding Transportation</h3>
+                        <p>Elegant vehicles to make your special day even more memorable.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Luxury limousines & classic cars
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Professional chauffeur
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Custom decoration options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Multiple vehicle packages
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$299/event</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-birthday-cake"></i> Celebration Package</h3>
+                        <p>Make any celebration special with our premium vehicles and personalized service.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Luxury vehicle options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Custom interior decoration
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Champagne & refreshments
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Professional photographer coordination
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">$199/event</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-item">
+                        <h3><i class="fas fa-film"></i> Film & Photography</h3>
+                        <p>Specialized vehicles and services for film productions and photography shoots.</p>
+                        <div class="category-features">
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Camera mount options
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Power supply for equipment
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Custom vehicle wraps available
+                            </div>
+                            <div class="category-feature">
+                                <i class="fas fa-check"></i> Production support staff
+                            </div>
+                        </div>
+                        <div class="category-price">
+                            <span>Perfect for:</span>
+                            <span class="price-value">Custom Quote</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section why-choose">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Veloce Services</h2>
+            </div>
+            
+            <div class="why-grid">
+                <div class="why-item animate-on-scroll">
+                    <div class="why-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Comprehensive Protection</h3>
+                    <p>Our rental agreements include comprehensive insurance coverage with options for additional protection at competitive rates.</p>
+                </div>
+                
+                <div class="why-item animate-on-scroll">
+                    <div class="why-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated customer service team is available around the clock to assist with any questions or emergencies.</p>
+                </div>
+                
+                <div class="why-item animate-on-scroll">
+                    <div class="why-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Flexible Modifications</h3>
+                    <p>Need to change your reservation? We offer free modifications up to 48 hours before pickup with no hidden fees.</p>
+                </div>
+                
+                <div class="why-item animate-on-scroll">
+                    <div class="why-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Premium Fleet</h3>
+                    <p>Choose from our extensive collection of luxury and economy vehicles, all meticulously maintained and updated annually.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+            </div>
+            <div class="testimonials-container">
+                <div class="testimonial animate-on-scroll">
+                    <p class="testimonial-content">"The family vacation package made our trip to Yellowstone so much easier. The van was perfect for our family of five, and the roof rack allowed us to bring all our camping gear. The child seat installation service was a lifesaver!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SJ</div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Family Traveler</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial animate-on-scroll">
+                    <p class="testimonial-content">"As a frequent business traveler, I appreciate Veloce's efficiency and reliability. Their premium fleet and convenient locations save me time and reduce travel stress. The mobile app is a game-changer for managing my rentals!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MR</div>
+                        <div class="author-info">
+                            <h4>Michael Reynolds</h4>
+                            <p>Corporate Executive</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial animate-on-scroll">
+                    <p class="testimonial-content">"I rented a convertible for my wedding anniversary along the Pacific Coast Highway, and it was absolutely perfect. The Coastal Cruise package included everything we needed for an unforgettable road trip. I'll definitely be using Veloce again!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">TD</div>
+                        <div class="author-info">
+                            <h4>Tina Davis</h4>
+                            <p>Road Trip Enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Experience Premium Service?</h2>
+            <p>Join thousands of satisfied customers who trust Veloce for their car rental needs. Whether it's a weekend getaway, business trip, or special occasion, we have the perfect service package for you.</p>
+            <a href="cars.html" class="btn">Browse Our Fleet</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="cars.html">Our Fleet</a></li>
+                        <li><a href="#" class="active">Services</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Our Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                        <li><a href="#">Special Occasion Rentals</a></li>
+                        <li><a href="#">Corporate Fleet</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Drive Street, New York, NY</li>
+                        <li><i class="fas fa-phone"></i> +1 (212) 555-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rental. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Animation on scroll
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        animateElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Initialize animations for elements already in view
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                animateElements.forEach(element => {
+                    if (isElementInViewport(element)) {
+                        element.classList.add('visible');
+                    }
+                });
+            }, 300);
+        });
+        
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+                rect.bottom >= 0
+            );
+        }
+        
+        // Service category tabs
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const categoryContents = document.querySelectorAll('.category-content');
+        
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                
+                // Update active tab
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                categoryContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `category-${category}`) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Initialize with first category active
+        document.querySelector('.category-tab.active').click();
+    </script>
+</body>
+</html>

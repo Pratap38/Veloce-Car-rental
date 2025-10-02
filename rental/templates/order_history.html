@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View your complete rental history with Veloce Car Rental. Manage your bookings and view trip details.">
+    <title>My Bookings | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'order_history.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <h1>Veloce<span>.</span></h1>
+                </a>
+                <div class="nav-links">
+                <a href="{% url 'home'%}">Home</a>
+                <a href="{% url 'car_list' %}">Cars</a>
+                <a href="{% url 'service' %}">Services</a>
+                <a href="{% url 'about' %}">About</a>
+                <a href="{% url 'contact' %}">Contact</a>
+                </div>
+                <div class="profile-section">
+                    <div class="profile-dropdown">
+                        <button class="profile-toggle">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="profile-name">{{ user.username }}</span>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                         <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> View Profile</a>
+                        <a href="{% url 'order_history' %}" class="dropdown-item"><i class="fas fa-history"></i> Order History</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item"><i class="fas fa-shopping-cart"></i> View Order Cart</a>
+                         <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                    </div>
+                </div>
+                <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-on-scroll">
+                <span class="subtitle">Your Rentals</span>
+                <h1>Booking History</h1>
+                <p class="hero-paragraph">Review your past and current rentals. Find all the details you need about your Veloce experiences.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Last Order Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Your Last Order</h2>
+            {% if last_order %}
+                <div class="booking-item animate-on-scroll">
+                    <div class="booking-header">
+                        <div class="booking-id">Booking #{{ last_order.id }}</div>
+                        <div class="booking-status {{ last_order.status|lower }}">{{ last_order.status }}</div>
+                    </div>
+                    <div class="booking-content">
+                        <div class="car-details">
+                            <div class="car-image">
+                                <img src="{{ last_order.car.image.url }}" alt="{{ last_order.car.car_name }}">
+                                <div class="car-tag">{{ last_order.car.category }}</div>
+                            </div>
+                            <div class="car-info">
+                                <h3>{{ last_order.car.car_name }}</h3>
+                                <div class="car-meta">
+                                    <span><i class="fas fa-calendar"></i> {{ last_order.start_date }} - {{ last_order.end_date }}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ last_order.pickup_location }} → {{ last_order.dropoff_location }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <i class="fas fa-user"></i>
+                                <div>
+                                    <h4>Driver</h4>
+                                    <p>{{ last_order.user.username }}</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-key"></i>
+                                <div>
+                                    <h4>Pickup</h4>
+                                    <p>{{ last_order.start_date }} | {{ last_order.pickup_time }}<br>{{ last_order.pickup_location }}</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-check"></i>
+                                <div>
+                                    <h4>Return</h4>
+                                    <p>{{ last_order.end_date }} | {{ last_order.dropoff_time }}<br>{{ last_order.dropoff_location }}</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tag"></i>
+                                <div>
+                                    <h4>Price</h4>
+                                    <p>₹{{ last_order.price_per_day }}/day<br><strong>₹{{ last_order.total_price }}</strong> total</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>You haven’t placed any orders yet.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- All Rentals Section -->
+    <section class="section">
+        <div class="container">
+            <h3>All Rentals</h3>
+            {% if rentals %}
+                <div class="bookings-container">
+                    {% for rental in rentals %}
+                        <div class="booking-item animate-on-scroll" data-status="{{ rental.status|lower }}">
+                            <div class="booking-header">
+                                <div class="booking-id">Booking #{{ rental.id }}</div>
+                                <div class="booking-status {{ rental.status|lower }}">{{ rental.status }}</div>
+                            </div>
+                            <div class="booking-content">
+                                <div class="car-details">
+                                    <div class="car-image">
+                                        <img src="{{ rental.car.image.url }}" alt="{{ rental.car.car_name }}">
+                                        <div class="car-tag">{{ rental.car.category }}</div>
+                                    </div>
+                                    <div class="car-info">
+                                        <h3>{{ rental.car.car_name }}</h3>
+                                        <div class="car-meta">
+                                            <span><i class="fas fa-calendar"></i> {{ rental.start_date }} - {{ rental.end_date }}</span>
+                                            <span><i class="fas fa-map-marker-alt"></i> {{ rental.pickup_location }} → {{ rental.dropoff_location }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="booking-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-user"></i>
+                                        <div>
+                                            <h4>Driver</h4>
+                                            <p>{{ rental.user.username }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-tag"></i>
+                                        <div>
+                                            <h4>Total Price</h4>
+                                            <p><strong>₹{{ rental.total_price }}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No rentals found.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+     <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'car_list'%}">Our Car</a></li>
+                        <li><a href="{% url 'service'%}">Services</a></li>
+                        <li><a href="{% url 'contact'%}">Contact </a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Gwalior Madhya Pradesh</li>
+                        <li><i class="fas fa-phone"></i> +91 231423146</li>
+                        <li><i class="fas fa-envelope"></i> veloce@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Veloce Car Rental Pratap. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-delay') || '0s';
+                        entry.target.style.transitionDelay = delay;
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Booking filters
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const bookingItems = document.querySelectorAll('.booking-item');
+            const emptyState = document.querySelector('.empty-state');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Get filter status
+                    const status = this.getAttribute('data-filter');
+                    
+                    // Filter bookings
+                    let visibleCount = 0;
+                    
+                    bookingItems.forEach(item => {
+                        if (status === 'all' || item.getAttribute('data-status') === status) {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show/hide empty state
+                    if (visibleCount === 0 && status !== 'all') {
+                        emptyState.style.display = 'block';
+                    } else {
+                        emptyState.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Action buttons
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const actionType = this.classList[1];
+                    let message = '';
+                    
+                    switch(actionType) {
+                        case 'view-details':
+                            message = 'Loading booking details...';
+                            break;
+                        case 'extend-booking':
+                            message = 'Extending your booking...';
+                            break;
+                        case 'contact-support':
+                            message = 'Connecting you with customer support...';
+                            break;
+                        case 'modify-booking':
+                            message = 'Modifying your booking...';
+                            break;
+                        case 'cancel-booking':
+                            if (confirm('Are you sure you want to cancel this booking?')) {
+                                this.closest('.booking-item').querySelector('.booking-status').textContent = 'Canceled';
+                                this.closest('.booking-item').querySelector('.booking-status').className = 'booking-status canceled';
+                                this.closest('.booking-item').setAttribute('data-status', 'canceled');
+                                alert('Your booking has been canceled successfully.');
+                            }
+                            return;
+                        case 'review-booking':
+                            message = 'Rating your experience...';
+                            break;
+                        case 'rebook':
+                            message = 'Rebooking the same vehicle...';
+                            break;
+                    }
+                    
+                    // Show loading state
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    this.disabled = true;
+                    
+                    // Simulate processing
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                        alert(message);
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

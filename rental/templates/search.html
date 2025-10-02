@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search our premium fleet of vehicles at Veloce Car Rental. Find the perfect car for your needs with our advanced search system.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'search.css' %}">
+    <title>
+        {% if query %}
+            Search Results for {{ query }} | Veloce Car Rental
+        {% else %}
+            Search Results | Veloce Car Rental
+        {% endif %}
+    </title>
+</head>
+<body>
+    <!-- Search Bar -->
+    <form method="get" action="{% url 'car_list' %}" class="search-form">
+        <input type="text" name="q" placeholder="Search by car name, model, or feature..." value="{{ query }}" autocomplete="off">
+        <button type="submit">
+            <i class="fas fa-search"></i> Find My Car
+        </button>
+    </form>
+
+    <!-- Filters Bar -->
+    <div class="filters-bar">
+        <div class="filter-btn active">
+            <i class="fas fa-road"></i> All Vehicles
+        </div>
+        <div class="filter-btn">
+            <i class="fas fa-car"></i> Sedans
+        </div>
+        <div class="filter-btn">
+            <i class="fas fa-truck-pickup"></i> SUVs
+        </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-count">
+        {{ cars|length }} vehicle{% if cars|length != 1 %}s{% endif %}
+        {% if query %}
+            found for "<strong>{{ query }}</strong>"
+        {% endif %}
+    </div>
+
+    <!-- Car Results -->
+    <div class="car-results">
+        {% if cars %}
+            {% for car in cars %}
+                <div class="car-card" data-category="{{ car.category|lower }}">
+                    <!-- Favorite Button -->
+                    <div class="favorite-btn" data-car-id="{{ car.id }}">
+                        <i class="far fa-heart"></i>
+                    </div>
+
+                    <!-- Car Image -->
+                    {% if car.image %}
+                        <img src="{{ car.image.url }}" alt="{{ car.car_name }}" class="car-image">
+                    {% else %}
+                        <img src="{% static 'images/default_car.jpg' %}" alt="Default Car" class="car-image">
+                    {% endif %}
+
+                    <h3>{{ car.car_name }}</h3>
+                    <p>{{ car.description|truncatechars:120 }}</p>
+                    <p>Price: ₹{{ car.current_price }}<span>/day</span></p>
+                     <a href="{% url 'car_detail' car.id %}" class="btn rent-btn">
+                    Rent Now
+                </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No cars available{% if query %} for "<span>{{ query }}</span>"{% endif %}. Try adjusting your search criteria.</p>
+        {% endif %}
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Finding the perfect vehicle for you...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const carCards = document.querySelectorAll('.car-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const category = this.textContent.trim().split('\n')[1].toLowerCase();
+
+                    carCards.forEach(card => {
+                        if (category === 'all vehicles' || card.dataset.category.includes(category)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // AJAX Favorite button functionality
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const carId = this.dataset.carId;
+                    const icon = this.querySelector('i');
+
+                    fetch("{% url 'add_to_wishlist' 0 %}".replace('0', carId), {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.status === "added") {
+                            icon.classList.remove("far");
+                            icon.classList.add("fas");
+                            icon.style.color = "red";
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
+            });
+
+            // Simulate loading state
+            const form = document.querySelector('.search-form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    document.querySelector('.car-results').style.display = 'none';
+                    document.querySelector('.loading').style.display = 'block';
+                    document.querySelector('.results-count').style.opacity = '0.5';
+
+                    setTimeout(() => {
+                        document.querySelector('.loading').style.display = 'none';
+                        document.querySelector('.car-results').style.display = 'grid';
+                        document.querySelector('.results-count').style.opacity = '1';
+                    }, 1000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

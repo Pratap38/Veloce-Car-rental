@@ -1,0 +1,393 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover the unparalleled luxury experience offered by Veloce Car Rental. Premium vehicles, personalized service, and exclusive amenities await you.">
+    <title>Luxury Experience | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'luxury_experience.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+                         {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> View Profile</a>
+                        <a href="{% url 'order_history' %}" class="dropdown-item"><i class="fas fa-history"></i> Order History</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item"><i class="fas fa-shopping-cart"></i> View Order Cart</a>
+                         <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">Book Now</a>
+        {% endif %}
+
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-on-scroll">
+                <span class="subtitle">Beyond Transportation</span>
+                <h1>The Veloce Luxury Experience</h1>
+                <p class="hero-paragraph">Experience the pinnacle of automotive luxury with our curated collection of premium vehicles and personalized service that exceeds expectations.</p>
+                <a href="/luxury-fleet" class="btn">Explore Luxury Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="section intro-section">
+        <div class="container">
+            <div class="intro-content animate-on-scroll">
+                <h2 class="section-title">More Than Just a Rental</h2>
+                <p class="intro-paragraph">At Veloce, we don't just provide vehicles—we craft unforgettable experiences. Our luxury program is designed for discerning travelers who demand excellence in every detail. From the moment you make your reservation to the final mile of your journey, our dedicated team ensures every aspect of your experience reflects the sophistication and attention to detail you deserve.</p>
+                
+                <div class="intro-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">100+</div>
+                        <div class="stat-label">Luxury Vehicles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Customer Satisfaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">24/7</div>
+                        <div class="stat-label">Concierge Service</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Luxury Features Section -->
+    <section class="section features-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 class="section-title">What Sets Our Luxury Experience Apart</h2>
+                <p>Discover the premium features and services that make Veloce the preferred choice for luxury travelers.</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card animate-on-scroll" data-delay="0.1s">
+                    <div class="feature-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Premium Fleet Selection</h3>
+                    <p>Our luxury fleet features only the most prestigious vehicles from brands like Mercedes-Benz, BMW, Audi, Porsche, and Rolls-Royce. Each vehicle is meticulously maintained and no more than 6 months old, ensuring peak performance and the latest technology.</p>
+                    <ul class="feature-list">
+                        <li>Executive sedans & luxury SUVs</li>
+                        <li>High-performance sports cars</li>
+                        <li>Exclusive limited edition models</li>
+                        <li>Customizable interior configurations</li>
+                        <li>Advanced driver assistance systems</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card animate-on-scroll" data-delay="0.2s">
+                    <div class="feature-icon">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <h3>Personal Concierge Service</h3>
+                    <p>Your dedicated luxury concierge handles every detail of your journey, ensuring a seamless experience from start to finish. Available 24/7 to accommodate your schedule and preferences.</p>
+                    <ul class="feature-list">
+                        <li>Personalized vehicle selection consultation</li>
+                        <li>Flexible pickup and return options</li>
+                        <li>Special requests coordination</li>
+                        <li>Travel itinerary planning assistance</li>
+                        <li>Restaurant and event reservations</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card animate-on-scroll" data-delay="0.3s">
+                    <div class="feature-icon">
+                        <i class="fas fa-wine-glass"></i>
+                    </div>
+                    <h3>Exclusive Amenities</h3>
+                    <p>Every luxury rental includes premium amenities designed to enhance your comfort and enjoyment. Our attention to detail ensures you experience true luxury from the moment you enter the vehicle.</p>
+                    <ul class="feature-list">
+                        <li>Complimentary premium beverages</li>
+                        <li>Hand-selected gourmet snacks</li>
+                        <li>Luxury leather interiors with massage function</li>
+                        <li>Advanced climate control zones</li>
+                        <li>Customizable ambient lighting</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card animate-on-scroll" data-delay="0.4s">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Premium Protection</h3>
+                    <p>Drive with complete peace of mind knowing your luxury experience is protected by our comprehensive coverage options and premium maintenance program.</p>
+                    <ul class="feature-list">
+                        <li>Zero-deductible premium insurance</li>
+                        <li>24/7 roadside assistance with luxury tow</li>
+                        <li>Complimentary vehicle wash and detail</li>
+                        <li>Priority maintenance and service</li>
+                        <li>Guaranteed same-model replacement</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Experience Section -->
+    <section class="section experience-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 class="section-title">Your Luxury Journey, Step by Step</h2>
+                <p>From reservation to return, every moment of your Veloce luxury experience is designed with precision and care.</p>
+            </div>
+            
+            <div class="experience-timeline">
+                <!-- Step 1 -->
+                <div class="timeline-item animate-on-scroll" data-delay="0.1s">
+                    <div class="timeline-number">01</div>
+                    <div class="timeline-content">
+                        <h3>Personalized Consultation</h3>
+                        <p>Our luxury specialists work with you to understand your needs, preferences, and travel plans. We'll recommend the perfect vehicle and customize your experience to match your expectations.</p>
+                        <div class="timeline-image">
+                            <img src="https://images.unsplash.com/photo-1583127283564-6f537081b6d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Personalized Consultation">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="timeline-item right animate-on-scroll" data-delay="0.2s">
+                    <div class="timeline-number">02</div>
+                    <div class="timeline-content">
+                        <h3>Seamless Booking & Preparation</h3>
+                        <p>Once your vehicle is selected, our team handles all the details. Your luxury vehicle is meticulously prepared, detailed, and equipped with your preferred amenities before your scheduled pickup.</p>
+                        <div class="timeline-image">
+                            <img src="https://images.unsplash.com/photo-1542362567-b07e54358754?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Vehicle Preparation">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="timeline-item animate-on-scroll" data-delay="0.3s">
+                    <div class="timeline-number">03</div>
+                    <div class="timeline-content">
+                        <h3>Flexible Delivery Options</h3>
+                        <p>Choose from multiple convenient options: airport pickup, hotel delivery, or our luxury showroom experience. Our white-glove service ensures your vehicle is delivered exactly when and where you need it.</p>
+                        <div class="timeline-image">
+                            <img src="https://images.unsplash.com/photo-1525015477548-5753a3535699?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Vehicle Delivery">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div class="timeline-item right animate-on-scroll" data-delay="0.4s">
+                    <div class="timeline-number">04</div>
+                    <div class="timeline-content">
+                        <h3>Uninterrupted Luxury Journey</h3>
+                        <p>Enjoy your journey with complete peace of mind. Our concierge is available 24/7 for any needs, and our premium protection ensures you experience luxury without concern.</p>
+                        <div class="timeline-image">
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Luxury Journey">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 5 -->
+                <div class="timeline-item animate-on-scroll" data-delay="0.5s">
+                    <div class="timeline-number">05</div>
+                    <div class="timeline-content">
+                        <h3>Effortless Return Process</h3>
+                        <p>When your journey concludes, we make the return process as seamless as the rest of your experience. Choose convenient return options with no hidden fees or unexpected charges.</p>
+                        <div class="timeline-image">
+                            <img src="https://images.unsplash.com/photo-1560958089-27a1a11fe9b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Vehicle Return">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 class="section-title">What Our Luxury Clients Say</h2>
+                <p>Don't just take our word for it—hear from clients who've experienced the Veloce difference.</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-on-scroll" data-delay="0.1s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"Renting a Mercedes S-Class from Veloce transformed my business trip to Mumbai. The seamless airport pickup, the vehicle's impeccable condition, and the concierge's attention to detail made me feel like royalty. I'll never use another service."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div class="author-info">
+                            <h4>Rajiv Mehta</h4>
+                            <p>CEO, Tech Innovations</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card animate-on-scroll" data-delay="0.2s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"For my anniversary weekend in Goa, Veloce provided a Rolls-Royce Phantom with champagne and flowers waiting inside. The level of personalization and service exceeded all expectations. Worth every penny for such a special occasion."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div class="author-info">
+                            <h4>Sophia Williams</h4>
+                            <p>International Travel Blogger</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card animate-on-scroll" data-delay="0.3s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"As a frequent luxury traveler, I've used many rental services, but Veloce stands out. Their vehicles are always the newest models, perfectly maintained, and their concierge service anticipates needs before you even realize them."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Corporate Executive</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content animate-on-scroll">
+                <h2>Elevate Your Travel Experience</h2>
+                <p>Join our exclusive community of discerning travelers who expect nothing but the best. Book your luxury vehicle today and experience the Veloce difference.</p>
+                <a href="/luxury-fleet" class="btn">Discover Luxury Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+     <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'car_list'%}">Our Car</a></li>
+                        <li><a href="{% url 'service'%}">Services</a></li>
+                        <li><a href="{% url 'contact'%}">Contact </a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Gwalior Madhya Pradesh</li>
+                        <li><i class="fas fa-phone"></i> +91 231423146</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Veloce Car Rental Pratap. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-delay') || '0s';
+                        entry.target.style.transitionDelay = delay;
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'checkout.css' %}">
+</head>
+<body>
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ request.user.username }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> View Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-history"></i> Order History
+                        </a>
+                        <a href="{% url 'cart' %}" class="dropdown-item">
+                            <i class="fas fa-shopping-cart"></i> View Order Cart
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <div class="container">
+            <div class="section-title">
+                <h2>Complete Your Reservation</h2>
+            </div>
+            <p class="section-subtitle" style="text-align: center; max-width: 700px; margin: 0 auto 2.5rem;">
+                Almost there! Please review your reservation details and complete your payment to secure your vehicle.
+            </p>
+
+            <div class="checkout-content">
+                <div class="checkout-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Personal Information</div>
+                    </div>
+                    <div class="step-divider"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Payment Method</div>
+                    </div>
+                    <div class="step-divider"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Confirmation</div>
+                    </div>
+                </div>
+
+                <form method="POST" action="{% url 'checkout' %}" id="checkout-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="car_id" value="{{ car.id }}">
+                    <input type="hidden" name="start_date" value="{{ start_date }}">
+                    <input type="hidden" name="end_date" value="{{ end_date }}">
+                    <input type="hidden" name="pickup_location" value="{{ pickup_location }}">
+                    <input type="hidden" name="dropoff_location" value="{{ dropoff_location }}">
+                    <input type="hidden" name="price_per_day" value="{{ car.current_price }}">
+                    <input type="hidden" name="total_price" value="{{ total_price }}">
+                    <input type="hidden" name="payment_method" id="payment_method" value="credit">
+                    <input type="hidden" name="transaction_id" id="transaction_id" value="">
+
+                    <div class="checkout-main">
+                        <div class="checkout-step active" id="step-1">
+                            <div class="checkout-form">
+                                <h3>Personal Information</h3>
+                                <p style="color: var(--gray); margin-bottom: 1.5rem;">Please provide your personal details for the reservation.</p>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        <input type="text" name="first_name" class="form-control" placeholder="Enter your first name" value="{{ request.user.first_name }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" placeholder="Enter your last name" value="{{ request.user.last_name }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" name="email" class="form-control" placeholder="Enter your email" value="{{ request.user.email }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="tel" name="phone" class="form-control" placeholder="Enter your phone number" value="{{ user_profile.phone_number }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Driver's License Number</label>
+                                        <input type="text" name="license_number" class="form-control" placeholder="Enter your license number" value="{{ user_profile.license_number }}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Date of Birth</label>
+                                        <input type="date" name="dob" class="form-control" value="{{ user_profile.dob }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Delivery Address</label>
+                                    <input type="text" name="address" class="form-control" placeholder="Street address" value="{{ user_profile.address }}" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" name="city" class="form-control" placeholder="City" value="{{ user_profile.city }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State/Province</label>
+                                        <input type="text" name="state" class="form-control" placeholder="State/Province" value="{{ user_profile.state }}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Postal Code</label>
+                                        <input type="text" name="postal_code" class="form-control" placeholder="Postal Code" value="{{ user_profile.postal_code }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="terms" required>
+                                        <label for="terms">I agree to the <a href="#">terms and conditions</a> and <a href="#">privacy policy</a></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-outline" id="prev-step" style="display: none;">
+                                        <i class="fas fa-arrow-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn" id="next-step">
+                                        Next Step <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout-step" id="step-2">
+                            <div class="checkout-form">
+                                <h3>Payment Method</h3>
+                                <p style="color: var(--gray); margin-bottom: 1.5rem;">Choose a payment method to complete your reservation.</p>
+
+                                <div class="payment-methods">
+                                    <div class="payment-method active" data-method="credit">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Credit Card</span>
+                                    </div>
+                                    <div class="payment-method" data-method="gpay">
+                                        <i class="fab fa-google-pay"></i>
+                                        <span>Google Pay</span>
+                                    </div>
+                                    <div class="payment-method" data-method="phonepe">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span>PhonePe</span>
+                                    </div>
+                                </div>
+
+                                <div class="payment-form active" id="credit-form">
+                                    <div class="form-group">
+                                        <label>Card Number</label>
+                                        <div class="card-input">
+                                            <input type="text" name="card_number" class="form-control" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+                                            <div class="card-type">
+                                                <i class="fab fa-cc-visa"></i>
+                                                <i class="fab fa-cc-mastercard"></i>
+                                                <i class="fab fa-cc-amex"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Expiration Date</label>
+                                            <input type="text" name="exp_date" class="form-control" placeholder="MM/YY" maxlength="5" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>CVV</label>
+                                            <input type="text" name="cvv" class="form-control" placeholder="XXX" maxlength="4" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Name on Card</label>
+                                        <input type="text" name="card_name" class="form-control" placeholder="Enter name as it appears on card" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="save-card" checked>
+                                            <label for="save-card">Save this card for future bookings</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="payment-form" id="gpay-form">
+                                    <div class="qr-section">
+                                        <div class="qr-header">
+                                            <h4>Scan QR Code to Pay with Google Pay</h4>
+                                            <p>Open Google Pay app and scan this QR code to complete your payment</p>
+                                        </div>
+                                        
+                                        <div class="qr-container">
+                                            <div class="qr-code" id="gpay-qr">
+                                                <img src="{{ qr_code }}" alt="UPI QR Code" width="250" height="250">
+                                            </div>
+                                 
+                                            <div class="qr-instructions">
+                                                <div class="instruction-step">
+                                                    <div class="step-number">1</div>
+                                                    <p>Open Google Pay on your phone</p>
+                                                </div>
+                                                <div class="instruction-step">
+                                                    <div class="step-number">2</div>
+                                                    <p>Tap on "Scan QR"</p>
+                                                </div>
+                                                <div class="instruction-step">
+                                                    <div class="step-number">3</div>
+                                                    <p>Scan the QR code above</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="payment-status" id="gpay-status">
+                                            <div class="status-pending">
+                                                <i class="fas fa-clock"></i>
+                                                <p>Waiting for payment confirmation...</p>
+                                                <small>Scan the QR code above to complete payment</small>
+                                            </div>
+                                            <div class="status-success" style="display: none;">
+                                                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                                                <p>Payment received successfully!</p>
+                                            </div>
+                                            <div class="status-failed" style="display: none;">
+                                                <i class="fas fa-times-circle" style="color: #F44336;"></i>
+                                                <p>Payment failed or expired</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="qr-actions">
+                                            <button type="button" class="btn btn-outline" id="gpay-refresh">
+                                                <i class="fas fa-sync-alt"></i> Refresh QR Code
+                                            </button>
+                                            <button type="button" class="btn" id="gpay-verify">
+                                                <i class="fas fa-check"></i> Verify Payment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="payment-form" id="phonepe-form">
+                                    <div class="qr-section">
+                                        <div class="qr-header">
+                                            <h4>Scan QR Code to Pay with PhonePe</h4>
+                                            <p>Open PhonePe app and scan this QR code to complete your payment</p>
+                                        </div>
+                                        
+                                        <div class="qr-container">
+                                            <div class="qr-code" id="phonepe-qr">
+                                                <img src="{{ qr_code }}" alt="UPI QR Code" width="250" height="250">
+                                            </div>
+                                            
+                                            <div class="qr-instructions">
+                                                <div class="instruction-step">
+                                                    <div class="step-number">1</div>
+                                                    <p>Open PhonePe on your phone</p>
+                                                </div>
+                                                <div class="instruction-step">
+                                                    <div class="step-number">2</div>
+                                                    <p>Tap on "Scan & Pay"</p>
+                                                </div>
+                                                <div class="instruction-step">
+                                                    <div class="step-number">3</div>
+                                                    <p>Scan the QR code above</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="payment-status" id="phonepe-status">
+                                            <div class="status-pending">
+                                                <i class="fas fa-clock"></i>
+                                                <p>Waiting for payment confirmation...</p>
+                                                <small>Scan the QR code above to complete payment</small>
+                                            </div>
+                                            <div class="status-success" style="display: none;">
+                                                <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                                                <p>Payment received successfully!</p>
+                                            </div>
+                                            <div class="status-failed" style="display: none;">
+                                                <i class="fas fa-times-circle" style="color: #F44336;"></i>
+                                                <p>Payment failed or expired</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="qr-actions">
+                                            <button type="button" class="btn btn-outline" id="phonepe-refresh">
+                                                <i class="fas fa-sync-alt"></i> Refresh QR Code
+                                            </button>
+                                            <button type="button" class="btn" id="phonepe-verify">
+                                                <i class="fas fa-check"></i> Verify Payment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-outline" id="prev-step-2">
+                                        <i class="fas fa-arrow-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn" id="next-step-2">
+                                        Review & Confirm <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout-step" id="step-3">
+                            <div class="checkout-confirmation">
+                                <div id="confirmation-pending" style="text-align: center; margin-bottom: 2rem;">
+                                    <div style="width: 80px; height: 80px; background: rgba(33, 150, 243, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                        <i class="fas fa-sync-alt fa-spin" style="font-size: 2rem; color: #2196F3;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.8rem; color: var(--primary);">Processing Your Payment</h3>
+                                    <p style="color: var(--gray);">Please wait while we confirm your payment...</p>
+                                    <div class="payment-timer" style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--gray);">
+                                        Time remaining: <span id="timer">60</span> seconds
+                                    </div>
+                                </div>
+                                
+                                <div id="confirmation-success" style="display: none; text-align: center; margin-bottom: 2rem;">
+                                    <div style="width: 80px; height: 80px; background: rgba(76, 175, 80, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #4CAF50;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.8rem; color: var(--primary);">Reservation Confirmed!</h3>
+                                    <p style="color: var(--gray);">Your payment has been successfully processed and your reservation is confirmed.</p>
+                                    
+                                    <div class="confirmation-details" style="max-width: 600px; margin: 2rem auto; background: #f8f9fa; border-radius: 10px; padding: 1.5rem;">
+                                        <h4 style="margin-bottom: 1rem; color: var(--primary);">Booking Details</h4>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem;">
+                                            <span style="color: var(--gray);">Booking ID:</span>
+                                            <span id="booking-id">VEL-2023-{{ booking_id }}</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem;">
+                                            <span style="color: var(--gray);">Total Amount:</span>
+                                            <span>₹{{ total_amount }}</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem;">
+                                            <span style="color: var(--gray);">Payment Method:</span>
+                                            <span id="payment-method-display">Credit Card</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span style="color: var(--gray);">Status:</span>
+                                            <span style="color: #4CAF50; font-weight: 600;">Confirmed</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="confirmation-actions" style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                                        <a href="{% url 'order_history' %}" class="btn btn-outline">
+                                            <i class="fas fa-history"></i> View Order History
+                                        </a>
+                                        <a href="{% url 'home' %}" class="btn">
+                                            <i class="fas fa-home"></i> Back to Home
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div id="confirmation-failed" style="display: none; text-align: center; margin-bottom: 2rem;">
+                                    <div style="width: 80px; height: 80px; background: rgba(244, 67, 54, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                        <i class="fas fa-times-circle" style="font-size: 3rem; color: #F44336;"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.8rem; color: var(--primary);">Payment Failed</h3>
+                                    <p style="color: var(--gray);">We couldn't process your payment. Please try again or select a different payment method.</p>
+                                    
+                                    <div class="failure-actions" style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                                        <button type="button" class="btn btn-outline" id="retry-payment">
+                                            <i class="fas fa-redo"></i> Try Again
+                                        </button>
+                                        <button type="button" class="btn" id="change-payment-method">
+                                            <i class="fas fa-credit-card"></i> Change Payment Method
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <section class="cta" style="padding: 4rem 0;">
+        <div class="container">
+            <h2>Need Assistance With Your Reservation?</h2>
+            <p>Our customer service team is available 24/7 to help you with any questions or special requests for your rental.</p>
+            <a href="tel:+12125557890" class="btn"><i class="fas fa-phone"></i> Call Us Now: +1 (212) 555-7890</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'car_list' %}">Our Fleet</a></li>
+                        <li><a href="{% url 'service' %}">Services</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Our Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                        <li><a href="#">Special Occasion Rentals</a></li>
+                        <li><a href="#">Corporate Fleet</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Drive Street, New York, NY</li>
+                        <li><i class="fas fa-phone"></i> +1 (212) 555-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rental. All rights reserved.
+            </div>
+        </div>
+    </footer>
+<script>
+// ====================== HEADER & MOBILE MENU ======================
+window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    header.classList.toggle('scrolled', window.scrollY > 100);
+});
+
+const mobileToggle = document.querySelector('.mobile-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+mobileToggle.addEventListener('click', function() {
+    navLinks.classList.toggle('active');
+    this.innerHTML = navLinks.classList.contains('active') ? 
+        '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+});
+
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    });
+});
+
+// ====================== CHECKOUT STEPS ======================
+const steps = document.querySelectorAll('.step');
+const checkoutSteps = document.querySelectorAll('.checkout-step');
+let currentStep = 1;
+let paymentVerified = false;
+let selectedPaymentMethod = 'credit';
+let paymentTimer;
+let countdown;
+
+function goToStep(step) {
+    steps.forEach((s, index) => {
+        const stepNum = index + 1;
+        s.classList.remove('active', 'completed');
+        if (stepNum < step) s.classList.add('completed');
+        if (stepNum === step) s.classList.add('active');
+    });
+
+    checkoutSteps.forEach((cs, index) => {
+        const stepNum = index + 1;
+        cs.classList.toggle('active', stepNum === step);
+    });
+
+    document.getElementById('prev-step').style.display = step > 1 ? 'inline-flex' : 'none';
+    document.getElementById('prev-step-2').style.display = step > 1 ? 'inline-flex' : 'none';
+    currentStep = step;
+}
+
+// ====================== STEP 1 ======================
+document.getElementById('next-step').addEventListener('click', function() {
+    const firstName = document.querySelector('#step-1 input[name="first_name"]').value;
+    const lastName = document.querySelector('#step-1 input[name="last_name"]').value;
+    const email = document.querySelector('#step-1 input[name="email"]').value;
+    const phone = document.querySelector('#step-1 input[name="phone"]').value;
+    const license = document.querySelector('#step-1 input[name="license_number"]').value;
+    const dob = document.querySelector('#step-1 input[name="dob"]').value;
+    const address = document.querySelector('#step-1 input[name="address"]').value;
+    const city = document.querySelector('#step-1 input[name="city"]').value;
+    const state = document.querySelector('#step-1 input[name="state"]').value;
+    const postalCode = document.querySelector('#step-1 input[name="postal_code"]').value;
+    const terms = document.getElementById('terms').checked;
+
+    if (!firstName || !lastName || !email || !phone || !license || !dob || !address || !city || !state || !postalCode) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    if (!terms) {
+        alert('You must agree to the terms and conditions.');
+        return;
+    }
+
+    goToStep(2);
+});
+
+// ====================== STEP 2 ======================
+document.getElementById('prev-step-2').addEventListener('click', function() {
+    goToStep(1);
+});
+
+// Payment method selection
+document.querySelectorAll('.payment-method').forEach(method => {
+    method.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+        this.classList.add('active');
+
+        selectedPaymentMethod = this.dataset.method;
+        document.getElementById('payment_method').value = selectedPaymentMethod;
+
+        document.querySelectorAll('.payment-form').forEach(form => form.classList.remove('active'));
+        document.getElementById(`${selectedPaymentMethod}-form`).classList.add('active');
+
+        const nextStepBtn = document.getElementById('next-step-2');
+        if (selectedPaymentMethod === 'credit') {
+            nextStepBtn.textContent = 'Review & Confirm ';
+            nextStepBtn.insertAdjacentHTML('beforeend', '<i class="fas fa-arrow-right"></i>');
+        } else {
+            nextStepBtn.textContent = 'Complete Reservation ';
+            nextStepBtn.insertAdjacentHTML('beforeend', '<i class="fas fa-arrow-right"></i>');
+        }
+    });
+});
+
+// Credit card formatting
+const cardInput = document.querySelector('#credit-form .form-control[name="card_number"]');
+if (cardInput) {
+    cardInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        let formatted = value.substring(0,4) + (value.length > 4 ? ' ' + value.substring(4,8) : '') +
+                        (value.length > 8 ? ' ' + value.substring(8,12) : '') +
+                        (value.length > 12 ? ' ' + value.substring(12,16) : '');
+        e.target.value = formatted;
+    });
+}
+
+const expInput = document.querySelector('#credit-form .form-control[name="exp_date"]');
+if (expInput) {
+    expInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        e.target.value = value.length > 2 ? value.substring(0,2)+'/'+value.substring(2,4) : value;
+    });
+}
+
+// UPI buttons (simulate verification)
+document.getElementById('gpay-verify').addEventListener('click', () => {
+    document.getElementById('gpay-status').querySelector('.status-pending').style.display = 'none';
+    document.getElementById('gpay-status').querySelector('.status-success').style.display = 'block';
+    paymentVerified = true;
+});
+document.getElementById('phonepe-verify').addEventListener('click', () => {
+    document.getElementById('phonepe-status').querySelector('.status-pending').style.display = 'none';
+    document.getElementById('phonepe-status').querySelector('.status-success').style.display = 'block';
+    paymentVerified = true;
+});
+
+// Step 2 next button
+document.getElementById('next-step-2').addEventListener('click', function() {
+    let formIsValid = false;
+    if (selectedPaymentMethod === 'credit') {
+        const cardNumber = document.querySelector('#credit-form input[name="card_number"]').value;
+        const expDate = document.querySelector('#credit-form input[name="exp_date"]').value;
+        const cvv = document.querySelector('#credit-form input[name="cvv"]').value;
+        const cardName = document.querySelector('#credit-form input[name="card_name"]').value;
+
+        if (cardNumber && expDate && cvv && cardName) {
+            formIsValid = true;
+        } else {
+            alert('Please fill in all required credit card fields.');
+        }
+    } else {
+        // Assume UPI payment is valid once user clicks 'Verify Payment'
+        if (paymentVerified) {
+            formIsValid = true;
+        } else {
+            alert('Please verify your UPI payment first.');
+        }
+    }
+    
+    if (formIsValid) {
+        goToStep(3);
+        showPaymentSuccess();
+    }
+});
+
+// ====================== PAYMENT CONFIRMATION ======================
+function showPaymentSuccess() {
+    clearInterval(countdown);
+    document.getElementById('confirmation-pending').style.display = 'none';
+    document.getElementById('confirmation-success').style.display = 'block';
+    const bookingId = 'VEL-' + Math.floor(1000 + Math.random() * 9000);
+    document.getElementById('booking-id').textContent = bookingId;
+    document.getElementById('payment-method-display').textContent = 
+        selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1);
+    
+    // Submit the form to the backend
+    document.getElementById('checkout-form').submit();
+}
+
+function showPaymentFailed() {
+    clearInterval(countdown);
+    document.getElementById('confirmation-pending').style.display = 'none';
+    document.getElementById('confirmation-failed').style.display = 'block';
+}
+
+// Retry/change payment
+document.getElementById('retry-payment').addEventListener('click', function() {
+    goToStep(2);
+    paymentVerified = false;
+});
+document.getElementById('change-payment-method').addEventListener('click', function() {
+    goToStep(2);
+    paymentVerified = false;
+});
+</script>
+
+</body>
+</html>

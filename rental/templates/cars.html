@@ -1,0 +1,287 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Fleet - Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'car.css' %}">
+
+</head>
+<body>
+    <!-- Header & Navigation with Integrated Search -->
+    <header id="header">
+        <div class="container navbar">
+           <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            
+            <!-- Search Toggle Button -->
+            <div class="search-toggle">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <a href="{% url 'cart'%}" class="btn"><i class="fas fa-shopping-cart"></i> Go Cart</a>
+        </div>
+        
+        <!-- Search Bar (hidden by default) -->
+       <div class="search-bar">
+    <form method="get" action="{% url 'search_cars' %}" class="search-input-container">
+        <input type="text" name="q" class="search-input" placeholder="Search by make, model, or features..." value="{{ request.GET.q }}">
+        <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+</div>
+
+    </header>
+
+    <!-- Category Filters -->
+  <!-- Category Filters -->
+<section class="category-filters">
+    <div class="container">
+        <div class="filters-container">
+            <div class="filter-item {% if selected_type == 'ALL' %}active{% endif %}">
+                <a href="{% url 'car_list' %}"><i class="fas fa-car"></i> All Vehicles</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'SEDAN' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'SEDAN' %}"><i class="fas fa-taxi"></i> Sedans</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'SUV' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'SUV' %}"><i class="fas fa-truck-monster"></i> SUVs</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'HATCH' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'HATCH' %}"><i class="fas fa-car-side"></i> Hatchbacks</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'CONVERTIBLE' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'CONVERTIBLE' %}"><i class="fas fa-car-side"></i> Convertibles</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'VAN' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'VAN' %}"><i class="fas fa-shuttle-van"></i> Vans</a>
+            </div>
+
+            <div class="filter-item {% if selected_type == 'TRUCK' %}active{% endif %}">
+                <a href="{% url 'car_list_by_type' 'TRUCK' %}"><i class="fas fa-truck"></i> Trucks</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+     <!-- Cars Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Fleet</h2>
+            </div>
+            
+            <div class="cars-intro">
+                <p>Explore our extensive collection of well-maintained vehicles. Whether you need a compact car for city driving or a spacious SUV for your family vacation, we have the perfect vehicle for every occasion.</p>
+            </div>
+            
+            <div class="cars-grid">
+                {% for car in cars %}
+                <div class="car-card animate-on-scroll">
+                    <div class="car-image">
+                        <img src="{{ car.image.url }}" alt="{{ car.car_name }}">
+                        {% if car.isavailable %}
+                            <div class="car-tag">Available</div>
+                        {% else %}
+                            <div class="car-tag" style="background:red;">Not Available</div>
+                        {% endif %}
+                    </div>
+                    <div class="car-content">
+                        <div class="car-title">
+                            <h3 class="car-name">{{ car.brand }} {{ car.model_name }}</h3>
+                            <div class="car-price">Rs.{{ car.current_price }}/day</div>
+                        </div>
+                        
+                        <a href="{% url 'car_detail' car.id %}" class="btn">Rent Now</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No cars available right now.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready for Your Next Adventure?</h2>
+            <p>Join thousands of satisfied customers who trust Veloce for their car rental needs. Whether it's a weekend getaway, business trip, or special occasion, we have the perfect vehicle for you.</p>
+            <a href="#" class="btn">Book Your Car Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="cars.html" class="active">Our Fleet</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Special Offers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Drive Street, New York, NY</li>
+                        <li><i class="fas fa-phone"></i> +1 (212) 555-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rental. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Animation on scroll
+        const animateElements = document.querySelectorAll('.animate-on-scroll');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        animateElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Initialize animations for elements already in view
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                animateElements.forEach(element => {
+                    if (isElementInViewport(element)) {
+                        element.classList.add('visible');
+                    }
+                });
+            }, 300);
+        });
+        
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+                rect.bottom >= 0
+            );
+        }
+        
+        // Search bar toggle functionality
+        const searchToggle = document.querySelector('.search-toggle');
+        const searchBar = document.querySelector('.search-bar');
+        const searchInput = document.querySelector('.search-input');
+        
+        searchToggle.addEventListener('click', function() {
+            searchBar.classList.toggle('active');
+            if (searchBar.classList.contains('active')) {
+                searchInput.focus();
+            }
+        });
+        
+        // Close search bar when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInsideSearch = searchBar.contains(event.target) || searchToggle.contains(event.target);
+            if (!isClickInsideSearch && searchBar.classList.contains('active')) {
+                searchBar.classList.remove('active');
+            }
+        });
+        
+        
+
+        
+        // Allow pressing Enter to search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    alert(`Searching for: ${searchTerm}\n\nIn a real implementation, this would filter the vehicle listings.`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

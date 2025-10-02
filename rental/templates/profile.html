@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <h2 class="profile-name">{{ user.get_full_name }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <span class="membership-badge">
+            {% if user.is_staff %} Admin {% else %} Premium Member {% endif %}
+        </span>
+    </div>
+
+    <!-- Profile Menu -->
+    <div class="profile-menu">
+        <a href="#profile-info" class="profile-menu-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile Information</span>
+        </a>
+        <a href="#order-history" class="profile-menu-item">
+            <i class="fas fa-history"></i>
+            <span>Order History</span>
+        </a>
+        <a href="#order-cart" class="profile-menu-item">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Order Cart ({{ cart_count }})</span>
+        </a>
+        <a href="#account-settings" class="profile-menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Account Settings</span>
+        </a>
+        <a href="{% url 'wishlist' %}" class="profile-menu-item">
+            <i class="fas fa-heart"></i>
+            <span>Saved Vehicles</span>
+        </a>
+        <a href="{% url 'logout' %}" class="profile-menu-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+
+    <!-- Main Profile Content -->
+    <div class="profile-content">
+        
+        <!-- Profile Information Section -->
+        <div id="profile-info" class="profile-section">
+            <div class="profile-section-header">
+                <h2 class="profile-section-title"><i class="fas fa-user-circle"></i> Profile Information</h2>
+                <div class="profile-section-actions">
+                    <button class="btn btn-outline"><i class="fas fa-edit"></i> Edit Profile</button>
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-card-title">Full Name</div>
+                <div class="info-card-value">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Email Address</div>
+                <div class="info-card-value">{{ request.user.email }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Phone Number</div>
+                <div class="info-card-value">{{ profile.phone_number }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Membership Level</div>
+                <div class="info-card-value">{{ profile.membership_level }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Address</div>
+                <div class="info-card-value">{{ profile.address }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Date of Birth</div>
+                <div class="info-card-value">{{ profile.date_of_birth }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-title">Licence Number</div>
+                <div class="info-card-value">{{ profile.license_number }}</div>
+            </div>
+        </div>
+
+        <!-- Order History Section -->
+        <div id="order-history" class="profile-section" style="display: none;">
+            <!-- ... your order history cards ... -->
+        </div>
+
+        <!-- Order Cart Section -->
+        <div id="order-cart" class="profile-section" style="display: none;">
+            <!-- ... your order cart content ... -->
+        </div>
+
+        <!-- Account Settings Section -->
+        <div id="account-settings" class="profile-section" style="display: none;">
+            <div class="profile-section-header">
+                <h2 class="profile-section-title"><i class="fas fa-cog"></i> Account Settings</h2>
+            </div>
+            <div class="profile-section-body">
+                <p>Here you can update your password, privacy preferences, and notification settings.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        mobileToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Profile menu navigation
+        const menuItems = document.querySelectorAll('.profile-menu-item');
+        const profileSections = document.querySelectorAll('.profile-section');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    profileSections.forEach(section => section.style.display = 'none');
+                    const targetId = this.getAttribute('href').replace('#', '');
+                    document.getElementById(targetId).style.display = 'block';
+                }
+            });
+        });
+
+        // Default active section
+        document.getElementById('profile-info').style.display = 'block';
+    </script>
+</body>
+</html>

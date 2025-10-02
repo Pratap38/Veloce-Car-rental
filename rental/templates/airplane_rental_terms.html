@@ -1,0 +1,432 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review the complete terms and conditions for Veloce Airplane Rentals. Understand your responsibilities and benefits when booking with us.">
+    <title>Airplane Rental Terms | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'airplane_rental_terms.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+   <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+                         {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> View Profile</a>
+                        <a href="{% url 'order_history' %}" class="dropdown-item"><i class="fas fa-history"></i> Order History</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item"><i class="fas fa-shopping-cart"></i> View Order Cart</a>
+                         <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">Book Now</a>
+        {% endif %}
+
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-on-scroll">
+                <span class="subtitle">Aviation Excellence</span>
+                <h1>Airplane Rental Terms & Conditions</h1>
+                <p class="hero-paragraph">Understand the complete terms and conditions for our premium airplane rental services. Your safety and satisfaction are our top priorities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms Overview Section -->
+    <section class="section terms-overview">
+        <div class="container">
+            <div class="overview-grid">
+                <div class="overview-card animate-on-scroll" data-delay="0.1s">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safety First</h3>
+                    <p>All rentals require valid pilot certification and adherence to aviation safety regulations.</p>
+                </div>
+                <div class="overview-card animate-on-scroll" data-delay="0.2s">
+                    <div class="card-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Binding Agreement</h3>
+                    <p>These terms form a legally binding agreement between you and Veloce Aviation.</p>
+                </div>
+                <div class="overview-card animate-on-scroll" data-delay="0.3s">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our aviation specialists are available around the clock for assistance.</p>
+                </div>
+                <div class="overview-card animate-on-scroll" data-delay="0.4s">
+                    <div class="card-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h3>Global Coverage</h3>
+                    <p>Terms may vary based on location and specific aircraft requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms Sections -->
+    <section class="section terms-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <h2 class="section-title">Complete Terms & Conditions</h2>
+                <p>Review the complete terms and conditions for our airplane rental services. Please read carefully before booking.</p>
+            </div>
+            
+            <div class="terms-container">
+                <!-- Section 1: Eligibility Requirements -->
+                <div class="terms-card animate-on-scroll" data-delay="0.1s">
+                    <div class="terms-header">
+                        <div class="terms-number">01</div>
+                        <h3>Eligibility Requirements</h3>
+                    </div>
+                    <div class="terms-content">
+                        <div class="terms-subheader">
+                            <i class="fas fa-user-check"></i>
+                            <h4>Pilot Certification</h4>
+                        </div>
+                        <ul>
+                            <li>All renters must possess a valid FAA (or equivalent aviation authority) pilot license appropriate for the aircraft class being rented</li>
+                            <li>Minimum flight experience requirements vary by aircraft type (typically 200+ hours for single-engine, 1000+ hours for complex aircraft)</li>
+                            <li>Recent flight experience: Minimum 15 hours within the last 90 days, including 3 takeoffs and landings</li>
+                            <li>Valid medical certificate appropriate for the license type</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-id-card"></i>
+                            <h4>Identification & Verification</h4>
+                        </div>
+                        <ul>
+                            <li>Government-issued photo ID (passport or driver's license)</li>
+                            <li>Current pilot license and medical certificate</li>
+                            <li>Flight logbook for verification of recent experience</li>
+                            <li>Credit card in the pilot's name for security deposit</li>
+                        </ul>
+                        
+                        <div class="terms-note">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Failure to provide complete documentation will result in rental denial without refund of reservation fees.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 2: Rental Agreement -->
+                <div class="terms-card animate-on-scroll" data-delay="0.2s">
+                    <div class="terms-header">
+                        <div class="terms-number">02</div>
+                        <h3>Rental Agreement</h3>
+                    </div>
+                    <div class="terms-content">
+                        <div class="terms-subheader">
+                            <i class="fas fa-file-contract"></i>
+                            <h4>Binding Agreement</h4>
+                        </div>
+                        <ul>
+                            <li>This agreement becomes effective upon signing the rental contract and payment of all required fees</li>
+                            <li>By signing, the pilot-in-command accepts full responsibility for the aircraft and all persons aboard</li>
+                            <li>The pilot-in-command warrants they have read and understand the aircraft's Pilot Operating Handbook (POH)</li>
+                            <li>Rental terms cannot be modified without written approval from Veloce Aviation management</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h4>Rental Period</h4>
+                        </div>
+                        <ul>
+                            <li>Rental time is calculated from engine start to engine shutdown</li>
+                            <li>Minimum rental period is 1 hour, with additional time billed in 15-minute increments</li>
+                            <li>Reservations must be canceled at least 24 hours in advance for full refund of reservation fee</li>
+                            <li>No-shows or late cancellations (less than 24 hours) forfeit the reservation fee</li>
+                        </ul>
+                        
+                        <div class="terms-note important">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>The pilot-in-command is responsible for conducting a thorough pre-flight inspection and verifying the aircraft's airworthiness before each flight.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 3: Financial Terms -->
+                <div class="terms-card animate-on-scroll" data-delay="0.3s">
+                    <div class="terms-header">
+                        <div class="terms-number">03</div>
+                        <h3>Financial Terms</h3>
+                    </div>
+                    <div class="terms-content">
+                        <div class="terms-subheader">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <h4>Pricing & Payment</h4>
+                        </div>
+                        <ul>
+                            <li>All rates are quoted in INR and include standard operating costs but exclude fuel</li>
+                            <li>Fuel is billed at current market rates plus a 10% service fee</li>
+                            <li>Payment methods: Credit card (Visa, Mastercard, Amex), wire transfer, or company check (with approved credit)</li>
+                            <li>Reservation requires 25% deposit, with full payment due 72 hours prior to rental</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Security Deposit</h4>
+                        </div>
+                        <ul>
+                            <li>Security deposit of ₹50,000 required for single-engine aircraft, ₹200,000 for multi-engine aircraft</li>
+                            <li>Deposit is held on your credit card and released within 14 business days after rental completion</li>
+                            <li>Deposit may be used to cover damage, excessive wear, or violation of rental terms</li>
+                            <li>No deposit is required for corporate accounts with established credit</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Damage Liability</h4>
+                        </div>
+                        <ul>
+                            <li>Pilot is responsible for all damage to the aircraft, regardless of cause</li>
+                            <li>Deductible for insurance claims is ₹50,000 per incident for single-engine aircraft</li>
+                            <li>Deductible increases to ₹200,000 for multi-engine and complex aircraft</li>
+                            <li>Intentional damage or operation outside aircraft limitations voids insurance coverage</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Section 4: Operational Requirements -->
+                <div class="terms-card animate-on-scroll" data-delay="0.4s">
+                    <div class="terms-header">
+                        <div class="terms-number">04</div>
+                        <h3>Operational Requirements</h3>
+                    </div>
+                    <div class="terms-content">
+                        <div class="terms-subheader">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h4>Flight Planning & Restrictions</h4>
+                        </div>
+                        <ul>
+                            <li>All flights must be filed with appropriate ATC authorities where required</li>
+                            <li>Maximum range limitations based on aircraft type and fuel capacity</li>
+                            <li>Minimum weather requirements: VFR - 3SM visibility, 1000' ceiling; IFR requires instrument rating</li>
+                            <li>International flights require special authorization and additional documentation</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-wind"></i>
+                            <h4>Weather Minimums</h4>
+                        </div>
+                        <ul>
+                            <li>VFR minimums: 3 statute miles visibility, 1,000 feet ceiling (basic)</li>
+                            <li>Special VFR requires specific clearance from ATC</li>
+                            <li>Night flying requires additional experience and may have higher weather minimums</li>
+                            <li>Pilot must cancel flights if weather falls below minimums or creates unsafe conditions</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-compass"></i>
+                            <h4>Navigation & Equipment</h4>
+                        </div>
+                        <ul>
+                            <li>Required equipment must be operational: Altimeter, Airspeed Indicator, Compass, etc.</li>
+                            <li>GPS navigation systems must have current database</li>
+                            <li>ELT (Emergency Locator Transmitter) must be operational and registered</li>
+                            <li>Portable oxygen required for flights above 12,500 feet for more than 30 minutes</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Section 5: Additional Terms -->
+                <div class="terms-card animate-on-scroll" data-delay="0.5s">
+                    <div class="terms-header">
+                        <div class="terms-number">05</div>
+                        <h3>Additional Terms</h3>
+                    </div>
+                    <div class="terms-content">
+                        <div class="terms-subheader">
+                            <i class="fas fa-users"></i>
+                            <h4>Passenger Policy</h4>
+                        </div>
+                        <ul>
+                            <li>Pilot is responsible for all passengers and their safety during the flight</li>
+                            <li>Maximum passenger capacity based on aircraft seating and weight limitations</li>
+                            <li>Passengers must receive safety briefing before each flight</li>
+                            <li>Children under 2 must be secured in FAA-approved child restraint systems</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-ban"></i>
+                            <h4>Prohibited Activities</h4>
+                        </div>
+                        <ul>
+                            <li>Aerobatic maneuvers are strictly prohibited without special authorization</li>
+                            <li>Flight into known icing conditions is prohibited</li>
+                            <li>Carrying hazardous materials is strictly prohibited</li>
+                            <li>Alcohol or drug use within 8 hours of flight (or longer as required by regulations)</li>
+                        </ul>
+                        
+                        <div class="terms-subheader">
+                            <i class="fas fa-file-alt"></i>
+                            <h4>Documentation & Reporting</h4>
+                        </div>
+                        <ul>
+                            <li>Pilot must complete and sign flight log after each rental</li>
+                            <li>Any discrepancies or damage must be reported immediately</li>
+                            <li>Flight plans must be filed where required by regulations</li>
+                            <li>Post-flight inspection must be documented in the aircraft logbook</li>
+                        </ul>
+                        
+                        <div class="terms-note">
+                            <i class="fas fa-info-circle"></i>
+                            <p>These terms and conditions are subject to change without notice. The most current version will always be available on our website and provided at time of booking.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="terms-footer animate-on-scroll">
+                <div class="contact-callout">
+                    <h3>Have Questions?</h3>
+                    <p>Our aviation specialists are available to clarify any terms or assist with your booking.</p>
+                    <div class="contact-options">
+                        <a href="tel:+919876543210" class="contact-btn">
+                            <i class="fas fa-phone"></i> +91 98765 43210
+                        </a>
+                        <a href="mailto:aviation@velocerentals.com" class="contact-btn">
+                            <i class="fas fa-envelope"></i> aviation@velocerentals.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content animate-on-scroll">
+                <h2>Ready for Your Next Flight?</h2>
+                <p>Review our available aircraft and book your premium flying experience with confidence.</p>
+                <a href="/aviation-fleet" class="btn">View Aircraft Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce Rentals</h3>
+                    <p>Premium car and aircraft rental service providing exceptional vehicles and customer service since 2010.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="/">Home</a>
+                        <a href="/fleet">Fleet</a>
+                        <a href="/services">How It Works</a>
+                        <a href="/about">About Us</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <div class="footer-links">
+                        <a href="#">Airport Transfers</a>
+                        <a href="#">Long-term Rentals</a>
+                        <a href="#">Luxury Rentals</a>
+                        <a href="#">Corporate Accounts</a>
+                        <a href="#">One-way Rentals</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-map-marker-alt"></i> 123 Auto Avenue, Mumbai</a>
+                        <a href="#"><i class="fas fa-phone"></i> +91 98765 43210</a>
+                        <a href="#"><i class="fas fa-envelope"></i> info@velocerentals.com</a>
+                        <a href="#"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rentals. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-delay') || '0s';
+                        entry.target.style.transitionDelay = delay;
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ car.car_name }} | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'details.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            
+            <!-- Profile Section -->
+                {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i> View Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-history"></i> Order History
+                        </a>
+                        <a href="{% url 'cart' %}" class="dropdown-item">
+                            <i class="fas fa-shopping-cart"></i> View Order Cart
+                        </a>
+                            <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn">Book Now</a>
+            {% endif %}
+        </div>
+          
+    </header>
+
+    <!-- Vehicle Details -->
+    <div class="vehicle-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="{% url 'home' %}">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'car_list' %}">Vehicles</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>{{ car.car_name }}</span>
+            </div>
+            
+            <div class="vehicle-title">
+                <h1 class="vehicle-name">{{ car.car_name }} - {{ car.model_name }}</h1>
+                <div class="vehicle-price">₹{{ car.current_price }} <span>/day</span></div>
+            </div>
+
+            <div class="vehicle-gallery">
+                <div class="main-image">
+                    <img src="{{ car.image.url }}" alt="{{ car.car_name }}">
+                </div>
+            </div>
+
+            <div class="vehicle-details">
+                <table class="specs-table">
+                    <tr><th>Brand</th><td>{{ car.brand }}</td></tr>
+                    <tr><th>Model</th><td>{{ car.model_name }}</td></tr>
+                    <tr><th>Year</th><td>{{ car.year }}</td></tr>
+                    <tr><th>Type</th><td>{{ car.get_car_type_display }}</td></tr>
+                    <tr><th>Available in</th><td>{{ car.available_city }}</td></tr>
+                    <tr><th>Available</th><td>{% if car.isavailable %}Yes{% else %}No{% endif %}</td></tr>
+                </table>
+
+                <div class="description">
+                    <h3>Description</h3>
+                    <p>{{ car.description }}</p>
+                </div>
+            </div>
+
+           <div class="vehicle-action">
+    {% if car.isavailable %}
+        <a href="{% url 'add_to_cart' car.id %}" class="btn">Rent Now</a>
+
+        <a href="{% url 'add_to_wishlist' car.id %}" style="text-decoration: none; width: 100%;">
+            <button type="button" class="btn" style="width: 100%; background: white; color: var(--secondary);">
+                <i class="fas fa-heart"></i> Save for Later
+            </button>
+        </a>
+    {% else %}
+        <button class="btn" style="width: 100%; background: gray;">Not Available</button>
+    {% endif %}
+</div>
+
+    </div>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Thumbnail gallery functionality
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        const mainImage = document.querySelector('.main-image img');
+        
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const imgSrc = this.querySelector('img').src;
+                mainImage.src = imgSrc;
+            });
+        });
+    </script>
+</body>
+</html>

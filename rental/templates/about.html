@@ -1,0 +1,440 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Veloce Car Rental - your trusted partner for premium vehicle rentals with exceptional service since 2010.">
+    <title>About Us | Veloce Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'about.css' %}">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="#" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                 <li><a href="/">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+            {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> View Profile</a>
+                        <a href="{% url 'order_history' %}" class="dropdown-item"><i class="fas fa-history"></i> Order History</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item"><i class="fas fa-shopping-cart"></i> View Order Cart</a>
+                            <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn">Book Now</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-on-scroll">
+                <span class="subtitle">Our Story</span>
+                <h1>Driving Excellence Since 2010</h1>
+                <p class="hero-paragraph">At Veloce, we're not just renting cars—we're creating unforgettable journeys. With a passion for premium vehicles and exceptional service, we've become the trusted choice for travelers across the country.</p>
+                <a href="/fleet" class="btn">Explore Our Fleet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="section story-section">
+        <div class="container">
+            <div class="story-grid">
+                <div class="story-content animate-on-scroll">
+                    <span class="section-tag">Our Journey</span>
+                    <h2 class="section-title">From Humble Beginnings to Industry Leader</h2>
+                    <p>Founded in 2010 by automotive enthusiasts with a vision for premium car rentals, Veloce started with just three vehicles in a small garage. Today, we've grown to a fleet of over 500 meticulously maintained vehicles serving customers in 15 cities nationwide.</p>
+                    <p>Our commitment to quality, transparency, and exceptional customer service has earned us numerous industry awards and the trust of over 100,000 satisfied customers.</p>
+                    
+                    <div class="milestones">
+                        <div class="milestone animate-on-scroll" data-delay="0.1s">
+                            <div class="milestone-year">2010</div>
+                            <div class="milestone-content">
+                                <h4>Company Founded</h4>
+                                <p>Three vehicles, one vision: to transform car rental experiences.</p>
+                            </div>
+                        </div>
+                        <div class="milestone animate-on-scroll" data-delay="0.2s">
+                            <div class="milestone-year">2014</div>
+                            <div class="milestone-content">
+                                <h4>Expansion</h4>
+                                <p>Expanded to 5 cities with a fleet of 50 vehicles.</p>
+                            </div>
+                        </div>
+                        <div class="milestone animate-on-scroll" data-delay="0.3s">
+                            <div class="milestone-year">2018</div>
+                            <div class="milestone-content">
+                                <h4>Industry Recognition</h4>
+                                <p>Awarded "Best Car Rental Service" for three consecutive years.</p>
+                            </div>
+                        </div>
+                        <div class="milestone animate-on-scroll" data-delay="0.4s">
+                            <div class="milestone-year">2023</div>
+                            <div class="milestone-content">
+                                <h4>National Presence</h4>
+                                <p>Serving 15 cities with 500+ premium vehicles and 24/7 support.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-image animate-on-scroll">
+                    <div class="image-container">
+                        <img src="{% static 'images/veloce.png' %}" alt="Veloce Car Rental History">
+                        <div class="image-overlay">
+                            <div class="overlay-content">
+                                <i class="fas fa-award"></i>
+                                <span>12+ Industry Awards</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Mission Section -->
+    <section class="section mission-section">
+        <div class="container">
+            <div class="mission-grid">
+                <div class="mission-content animate-on-scroll">
+                    <span class="section-tag">Our Core Values</span>
+                    <h2 class="section-title">Driving Your Journey Forward</h2>
+                    <p class="mission-intro">Our mission extends beyond simply providing vehicles. We're committed to creating seamless, enjoyable experiences that empower our customers to explore with confidence.</p>
+                    
+                    <div class="values-grid">
+                        <div class="value-card animate-on-scroll" data-delay="0.1s">
+                            <div class="value-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>Trust & Safety</h3>
+                            <p>Every vehicle undergoes rigorous 50-point inspections to ensure your safety and peace of mind.</p>
+                        </div>
+                        <div class="value-card animate-on-scroll" data-delay="0.2s">
+                            <div class="value-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <h3>Premium Quality</h3>
+                            <p>Our carefully curated fleet features only the newest, most reliable vehicles from top manufacturers.</p>
+                        </div>
+                        <div class="value-card animate-on-scroll" data-delay="0.3s">
+                            <div class="value-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h3>Exceptional Service</h3>
+                            <p>Our dedicated team provides 24/7 support to ensure your journey is flawless from start to finish.</p>
+                        </div>
+                        <div class="value-card animate-on-scroll" data-delay="0.4s">
+                            <div class="value-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h3>Sustainable Mobility</h3>
+                            <p>Committed to reducing our environmental impact with 25% electric/hybrid vehicles in our fleet.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mission-stats animate-on-scroll">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="100000">0</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="500">0</div>
+                        <div class="stat-label">Premium Vehicles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="15">0</div>
+                        <div class="stat-label">Cities Served</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="12">0</div>
+                        <div class="stat-label">Industry Awards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team Section -->
+    <section class="section team-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Meet Our Team</span>
+                <h2 class="section-title">The People Behind Your Perfect Ride</h2>
+                <p>Our dedicated team of automotive experts and customer service professionals work tirelessly to ensure your rental experience exceeds expectations.</p>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-member animate-on-scroll" data-delay="0.1s">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Alex Johnson">
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <h3>Alex Johnson</h3>
+                        <p class="position">Founder & CEO</p>
+                        <p class="bio">With 15+ years in the automotive industry, Alex envisioned a car rental experience focused on quality and customer satisfaction.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-on-scroll" data-delay="0.2s">
+                    <div class="member-image">
+                        <img src="{% static 'images/women.png' %}" alt="Sarah Williams">
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <h3>Sarah Williams</h3>
+                        <p class="position">Operations Director</p>
+                        <p class="bio">Sarah ensures our fleet maintains the highest standards with her meticulous attention to detail and operational expertise.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-on-scroll" data-delay="0.3s">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Michael Chen">
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <h3>Michael Chen</h3>
+                        <p class="position">Customer Experience Lead</p>
+                        <p class="bio">Michael's passion for exceptional service has shaped our award-winning customer support system.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member animate-on-scroll" data-delay="0.4s">
+                    <div class="member-image">
+                        <img src="{% static 'images/women2.png' %}" alt="Priya Patel">
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="member-info">
+                        <h3>Priya Patel</h3>
+                        <p class="position">Fleet Manager</p>
+                        <p class="bio">Priya oversees our premium fleet, ensuring every vehicle meets our rigorous quality standards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Customer Love</span>
+                <h2 class="section-title">What Our Customers Say</h2>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-on-scroll" data-delay="0.1s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"Veloce made my road trip planning effortless. The car was in perfect condition, and the pickup process was seamless. I'll definitely be using them again for my next adventure!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Travel Blogger</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card animate-on-scroll" data-delay="0.2s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"As a frequent business traveler, I need reliability and professionalism. Veloce delivers both with their premium fleet and exceptional customer service. Worth every penny!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Corporate Executive</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card animate-on-scroll" data-delay="0.3s">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"The electric vehicle option was perfect for my eco-conscious trip. The car had great range and the charging infrastructure support was excellent. Truly forward-thinking company!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div class="author-info">
+                            <h4>Rajiv Sharma</h4>
+                            <p>Environmental Consultant</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content animate-on-scroll">
+                <h2>Ready to Experience Premium Car Rental?</h2>
+                <p>Join thousands of satisfied customers who trust Veloce for their car rental needs. Book today and experience the difference!</p>
+                <a href="/fleet" class="btn">Book Your Perfect Ride</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce Rentals</h3>
+                    <p>Premium car rental service providing exceptional vehicles and customer service since 2010.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="/">Home</a>
+                        <a href="/fleet">Fleet</a>
+                        <a href="/services">How It Works</a>
+                        <a href="/about">About Us</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <div class="footer-links">
+                        <a href="#">Airport Transfers</a>
+                        <a href="#">Long-term Rentals</a>
+                        <a href="#">Luxury Rentals</a>
+                        <a href="#">Corporate Accounts</a>
+                        <a href="#">One-way Rentals</a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-map-marker-alt"></i> 123 Auto Avenue, Mumbai</a>
+                        <a href="#"><i class="fas fa-phone"></i> +91 98765 43210</a>
+                        <a href="#"><i class="fas fa-envelope"></i> info@velocerentals.com</a>
+                        <a href="#"><i class="fas fa-clock"></i> Mon-Sun: 8AM - 10PM</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 Veloce Car Rentals. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = entry.target.getAttribute('data-delay') || '0s';
+                        entry.target.style.transitionDelay = delay;
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggle.innerHTML = navLinks.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Statistics counter animation
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-count'));
+                const duration = 2000; // ms
+                let start = 0;
+                
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        const increment = target / (duration / 16);
+                        
+                        const updateCount = () => {
+                            start += increment;
+                            if (start < target) {
+                                stat.textContent = Math.floor(start).toLocaleString();
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                stat.textContent = target.toLocaleString();
+                            }
+                        };
+                        
+                        updateCount();
+                        observer.unobserve(stat);
+                    }
+                });
+                
+                observer.observe(stat);
+            });
+        });
+    </script>
+</body>
+</html>

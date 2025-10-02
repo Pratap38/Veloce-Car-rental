@@ -1,0 +1,450 @@
+{% load static %}
+{% include 'chatbot.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veloce - Premium Car Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'home.css' %}">
+  
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container navbar">
+            <a href="{% url 'home' %}" class="logo">
+                <h1>Veloce<span>.</span></h1>
+            </a>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'car_list' %}">Cars</a></li>
+                <li><a href="{% url 'service' %}">Services</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+             {% if user.is_authenticated %}
+            <div class="profile-section">
+                <div class="profile-dropdown">
+                    <button class="profile-toggle">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="profile-name">{{ user.username|truncatechars:10 }}</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-user-circle"></i> View Profile</a>
+                        <a href="{% url 'order_history' %}" class="dropdown-item"><i class="fas fa-history"></i> Order History</a>
+                        <a href="{% url 'cart' %}" class="dropdown-item"><i class="fas fa-shopping-cart"></i> View Order Cart</a>
+                         <a href="{% url 'wishlist' %}" class="dropdown-item"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'logout' %}" class="dropdown-item logout-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn">Book Now</a>
+            {% endif %}
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape-1"></div>
+            <div class="shape-2"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Drive Your Dream Car Today</h1>
+                <p>Discover our premium fleet of luxury vehicles at unbeatable prices. Experience the thrill of driving with Veloce - where every journey becomes an adventure.</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'car_list' %}" class="btn">Explore Cars</a>
+                    <a href="#" class="btn btn-outline">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Carousel -->
+    <section class="section featured-carousel">
+        <div class="container">
+            <div class="carousel-container">
+                <div class="carousel">
+                    {% for image in carousel_images %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="carousel-content">
+                            <img src="{{ image.image.url }}" alt="{{ image.title }}">
+                            <div class="carousel-caption">
+                                <h3>{{ image.title }}</h3>
+                                <p>{{ image.description }}</p>
+                                {% if image.car_link %}
+                                <a href="{% url 'car_detail' image.car_link.id %}" class="btn">View Car</a>
+                                {% else %}
+                                <!-- <a href="{% url 'car_list' %}" class="btn">Explore Fleet</a> -->
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <!-- Fallback if no carousel images -->
+                    <div class="carousel-item active">
+                        <div class="carousel-content">
+                            <img src="{% static 'images/default_carousel.jpg' %}" alt="Premium Vehicles">
+                            <div class="carousel-caption">
+                                <h3>Premium Vehicle Collection</h3>
+                                <p>Discover our handpicked selection of luxury vehicles for your next adventure</p>
+                                <a href="{% url 'car_list' %}" class="btn">Explore Cars</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-content">
+                            <img src="{% static 'images/default_carousel2.jpg' %}" alt="Luxury Experience">
+                            <div class="carousel-caption">
+                                <h3>Luxury Redefined</h3>
+                                <p>Experience unmatched comfort and style with our premium fleet</p>
+                                <a href="{% url 'car_list' %}" class="btn">Explore Cars</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-content">
+                            <img src="{% static 'images/default_carousel3.jpg' %}" alt="Road Trips">
+                            <div class="carousel-caption">
+                                <h3>Road Trip Ready</h3>
+                                <p>Perfect vehicles for your next unforgettable journey</p>
+                                <a href="{% url 'car_list' %}" class="btn">Explore Cars</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Carousel Controls -->
+                <div class="carousel-controls">
+                    <button class="carousel-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-dots">
+                        {% for image in carousel_images %}
+                        <span class="carousel-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></span>
+                        {% empty %}
+                        <span class="carousel-dot active" data-index="0"></span>
+                        <span class="carousel-dot" data-index="1"></span>
+                        <span class="carousel-dot" data-index="2"></span>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Veloce</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Premium Fleet</h3>
+                    <p>Choose from our extensive collection of luxury and economy vehicles, all meticulously maintained and updated annually.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Unbeatable Prices</h3>
+                    <p>Enjoy competitive rates with no hidden fees. Our price match guarantee ensures you get the best deal available.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated customer service team is available around the clock to assist with any questions or emergencies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cars Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Vehicles</h2>
+            </div>
+            <div class="cars-grid">
+                {% for car in cars %}
+            <div class="car-card animate-on-scroll">
+                <div class="car-image">
+                    <img src="{{ car.image.url }}" alt="{{ car.car_name }}">
+                    <div class="car-tag">
+                        {{ car.car_type|title }}
+                    </div>
+                </div>
+                <div class="car-content">
+                    <div class="car-title">
+                        <h3 class="car-name">{{ car.car_name }}</h3>
+                        <div class="car-price">₹{{ car.current_price }}/day</div>
+                    </div>
+                    <p>{{ car.description|truncatewords:20 }}</p>
+                    <div class="car-details">
+                        <div><i class="fas fa-users"></i> Seats info here (add field if needed)</div>
+                        <div><i class="fas fa-gas-pump"></i> {{ car.car_type }}</div>
+                    </div>
+                    <a href="{% url 'car_detail' car.id %}" class="btn">Rent Now</a>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+            </div>
+            <div class="testimonials-container">
+                <div class="testimonial animate-on-scroll">
+                    <p class="testimonial-content">"Veloce made my vacation planning so much easier! The car was in perfect condition, the process was seamless, and the customer service was exceptional. I'll definitely be using them again."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div>
+                            <h4>Michael Johnson</h4>
+                            <p>Travel Blogger</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial animate-on-scroll">
+                    <p class="testimonial-content">"As a frequent business traveler, I appreciate Veloce's efficiency and reliability. Their premium fleet and convenient locations save me time and reduce travel stress. The mobile app is a game-changer!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SR</div>
+                        <div>
+                            <h4>Sarah Reynolds</h4>
+                            <p>Corporate Executive</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready for Your Next Adventure?</h2>
+            <p>Join thousands of satisfied customers who trust Veloce for their car rental needs. Whether it's a weekend getaway, business trip, or special occasion, we have the perfect vehicle for you.</p>
+            <a href="#" class="btn">Book Your Car Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Veloce</h3>
+                    <p>Premium car rental service providing luxury vehicles at competitive prices. We're committed to making your travel experience exceptional.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="{% url 'car_list'%}">Our Car</a></li>
+                        <li><a href="{% url 'service'%}">Services</a></li>
+                        <li><a href="{% url 'contact'%}">Contact </a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Airport Rentals</a></li>
+                        <li><a href="#">Long-Term Leasing</a></li>
+                        <li><a href="#">Luxury Vehicles</a></li>
+                        <li><a href="#">Family Cars</a></li>
+                        <li><a href="#">Road Trip Packages</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Gwalior Madhya Pradesh</li>
+                        <li><i class="fas fa-phone"></i> +91 231423146</li>
+                        <li><i class="fas fa-envelope"></i> info@veloce.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8AM - 10PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Veloce Car Rental Pratap. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+   <script>
+    // ===== HEADER SCROLL EFFECT =====
+    window.addEventListener('scroll', function () {
+        const header = document.getElementById('header');
+        if (window.scrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // ===== MOBILE MENU TOGGLE =====
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', function () {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active')
+                ? '<i class="fas fa-times"></i>'
+                : '<i class="fas fa-bars"></i>';
+        });
+    }
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        });
+    });
+
+    // ===== ANIMATION ON SCROLL =====
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    animateElements.forEach(element => observer.observe(element));
+
+    // Initialize animations for already visible elements
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(() => {
+            animateElements.forEach(element => {
+                if (isElementInViewport(element)) {
+                    element.classList.add('visible');
+                }
+            });
+        }, 300);
+    });
+
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9 &&
+            rect.bottom >= 0
+        );
+    }
+
+    // ===== CAROUSEL FUNCTIONALITY =====
+    document.addEventListener('DOMContentLoaded', function () {
+        const carousel = document.querySelector('.carousel');
+        const items = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+
+        if (!carousel || items.length === 0) return;
+
+        let currentIndex = 0;
+        const totalItems = items.length;
+
+        function updateCarousel() {
+            // Update items
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === currentIndex);
+            });
+
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalItems;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+            updateCarousel();
+        }
+
+        // Event listeners
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                currentIndex = parseInt(dot.getAttribute('data-index'));
+                updateCarousel();
+            });
+        });
+
+        // Auto-rotate every 5s
+        let autoRotate = setInterval(nextSlide, 5000);
+
+        // Pause on hover
+        carousel.addEventListener('mouseenter', () => clearInterval(autoRotate));
+        carousel.addEventListener('mouseleave', () => {
+            autoRotate = setInterval(nextSlide, 5000);
+        });
+    });
+
+    // ===== CAR DATA EXPORT (for chatbot or other features) =====
+    window.carsData = [
+        {% for car in cars %}
+        {
+            name: "{{ car.car_name }}",
+            price: {{ car.current_price }},
+            type: "{{ car.car_type|escapejs }}",
+            seats: "{{ car.seats|default:'5'|escapejs }}",
+            fuel: "{{ car.fuel_type|default:'Petrol'|escapejs }}",
+            transmission: "{{ car.transmission|default:'Automatic'|escapejs }}",
+            description: "{{ car.description|truncatewords:30|escapejs }}"
+        },
+        {% endfor %}
+    ];
+</script>
+
+</body>
+</html>
