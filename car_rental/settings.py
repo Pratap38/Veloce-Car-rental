@@ -1,14 +1,20 @@
 import os
 from pathlib import Path
+from django.core.wsgi import get_wsgi_application
+from whitenoise import WhiteNoise
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ------------------------
 # Security
+# ------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1")
 ALLOWED_HOSTS = ["*"]
 
+# ------------------------
 # Applications
+# ------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -31,7 +37,9 @@ REST_FRAMEWORK = {
     )
 }
 
+# ------------------------
 # Middleware
+# ------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # ✅ For static files
@@ -73,7 +81,9 @@ DATABASES = {
     }
 }
 
+# ------------------------
 # Password validation
+# ------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -81,25 +91,42 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# ------------------------
 # Internationalization
+# ------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
 # ------------------------
-# Static & Media
+# Static files
 # ------------------------
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # ✅ Required for Render
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# ------------------------
+# Media files
+# ------------------------
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 
+# ------------------------
 # Auth Redirects
+# ------------------------
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
+# ------------------------
+# Default PK
+# ------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ------------------------
+# WSGI + WhiteNoise for Media
+# ------------------------
+application = get_wsgi_application()
+# Serve media files via WhiteNoise in production
+application = WhiteNoise(application, root=str(MEDIA_ROOT), prefix=MEDIA_URL)
