@@ -1,19 +1,14 @@
 import os
 from pathlib import Path
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------------
 # Security
-# ------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
-ALLOWED_HOSTS = ["*"]  # Render gives you a domain, or set to ["your-app.onrender.com"]
+ALLOWED_HOSTS = ["*"]
 
-# ------------------------
 # Applications
-# ------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -36,12 +31,10 @@ REST_FRAMEWORK = {
     )
 }
 
-# ------------------------
 # Middleware
-# ------------------------
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # ⚡ for serving static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # ✅ For static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -71,19 +64,16 @@ TEMPLATES = [
 WSGI_APPLICATION = "car_rental.wsgi.application"
 
 # ------------------------
-# Database
+# Database (SQLite only)
 # ------------------------
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=False
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
-# ------------------------
-# Password Validators
-# ------------------------
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -91,9 +81,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------------
 # Internationalization
-# ------------------------
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -104,19 +92,14 @@ USE_TZ = True
 # ------------------------
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # ⚡ Required for Render
+STATIC_ROOT = BASE_DIR / "staticfiles"  # ✅ Required for Render
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# ------------------------
 # Auth Redirects
-# ------------------------
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
-# ------------------------
-# Default PK
-# ------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
