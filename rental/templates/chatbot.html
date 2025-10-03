@@ -1,9 +1,275 @@
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veloce Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== GLOBAL STYLES (replace with your project's variables) ===== */
+        :root {
+            --primary: #1a2a4c;
+            --secondary: #3b5998;
+            --accent: #ff6b35;
+            --dark: #2c3e50;
+            --light-gray: #f9fafb;
+            --transition: all 0.2s ease-in-out;
+        }
 
-<!-- ===== CHATBOT ===== -->
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
+        /* ===== CHATBOT STYLES ===== */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
 
-<!-- ===== CHATBOT ===== -->
+        .chatbot-toggle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 76px;
+            right: 0;
+            width: 340px;
+            height: 480px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-in-out;
+        }
+
+        .chatbot-window.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .chatbot-header {
+            padding: 1rem 1.2rem;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            line-height: 1.5;
+            font-size: 0.92rem;
+            word-break: break-word;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--secondary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            border: 1px solid #eaeaea;
+            border-bottom-left-radius: 4px;
+            color: var(--dark);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 0.7rem;
+            background: white;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.65rem 1rem;
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 24px 0 0 24px;
+            outline: none;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .chatbot-input input:focus {
+            border-color: var(--accent);
+        }
+
+        .chatbot-input button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 42px;
+            border-radius: 0 24px 24px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .chatbot-input button:hover {
+            background: #e55a2a;
+        }
+
+        /* Loading indicator for bot */
+        .loading {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== MOBILE STYLES ===== */
+        @media (max-width: 768px) {
+            .chatbot-container {
+                bottom: unset;
+                right: unset;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                pointer-events: none;
+            }
+
+            .chatbot-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 10000;
+                pointer-events: auto;
+            }
+
+            .chatbot-window {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                bottom: unset;
+                right: unset;
+                transform: translate(-50%, -50%) scale(0.95);
+                width: 94%;
+                max-width: 360px;
+                height: 85vh;
+                max-height: 520px;
+                z-index: 10001;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+                border-radius: 18px;
+            }
+
+            .chatbot-window.active {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            .chatbot-header {
+                border-radius: 18px 18px 0 0;
+            }
+
+            .chatbot-container::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(3px);
+                z-index: 10000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0s 0.3s;
+                pointer-events: none;
+            }
+
+            .chatbot-container.active-overlay::before {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
 <div class="chatbot-container">
     <button class="chatbot-toggle" aria-label="Open chat">
         <i class="fas fa-robot"></i>
@@ -11,626 +277,246 @@
     <div class="chatbot-window">
         <div class="chatbot-header">
             <h4><i class="fas fa-robot" style="color: var(--accent);"></i> Veloce Assistant</h4>
-            <button class="chatbot-close">&times;</button>
+            <button class="chatbot-close" aria-label="Close chat">&times;</button>
         </div>
         <div class="chatbot-messages" id="chatbot-messages">
             <div class="message bot-message">
                 Hi! I'm your Veloce assistant 😊<br>
                 Ask me things like:<br>
-                • “Show cheapest cars”<br>
-                • “What luxury cars do you have?”<br>
-                • “Tell me about [Car Name]”<br>
-                • “Best car for family?”
+                • "Show cheapest cars"<br>
+                • "What luxury cars do you have?"<br>
+                • "Tell me about [Car Name]"<br>
+                • "Best car for family?"
             </div>
         </div>
         <div class="chatbot-input">
             <input type="text" id="user-input" placeholder="Type your question..." autocomplete="off">
-            <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            <button id="send-btn" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 </div>
 
-<style>
-/* ===== CHATBOT STYLES ===== */
-.chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-}
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        // Prevent script from running multiple times
+        if (window.chatbotInitialized) return;
+        window.chatbotInitialized = true;
 
-.chatbot-toggle {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    font-size: 1.4rem;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        const container = document.querySelector('.chatbot-container');
+        const toggleBtn = container.querySelector('.chatbot-toggle');
+        const closeBtn = container.querySelector('.chatbot-close');
+        const chatWindow = container.querySelector('.chatbot-window');
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
 
-.chatbot-toggle:hover {
-    transform: scale(1.1) rotate(15deg);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
-}
+        let carsData = [];
 
-.chatbot-window {
-    position: absolute;
-    bottom: 76px;
-    right: 0;
-    width: 340px;
-    height: 480px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0.95);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        // Fetch car data (mocking an API call)
+        async function fetchCarsData() {
+            try {
+                // In a real application, you would fetch from a server endpoint
+                // const response = await fetch('/api/cars');
+                // carsData = await response.json();
+                
+                // For this example, we use a hardcoded array
+                carsData = [
+                    { name: 'Swift', price: 1200, type: 'Hatchback', seats: 4, fuel: 'Petrol', transmission: 'Manual', description: 'A compact and fuel-efficient car, perfect for city drives.' },
+                    { name: 'Baleno', price: 1500, type: 'Hatchback', seats: 5, fuel: 'Petrol', transmission: 'Automatic', description: 'A spacious hatchback with a premium feel and smooth ride.' },
+                    { name: 'Honda Amaze', price: 1800, type: 'Sedan', seats: 5, fuel: 'Petrol', transmission: 'Automatic', description: 'A reliable and comfortable sedan with a large boot space.' },
+                    { name: 'Toyota Innova', price: 3500, type: 'MPV', seats: 7, fuel: 'Diesel', transmission: 'Manual', description: 'The best-in-class MPV for family trips, offering great comfort and space.' },
+                    { name: 'Mahindra Thar', price: 4000, type: 'SUV', seats: 4, fuel: 'Diesel', transmission: 'Manual', description: 'An iconic off-roader, built to conquer any terrain with its rugged design.' },
+                    { name: 'Audi A4', price: 6000, type: 'Luxury Sedan', seats: 5, fuel: 'Petrol', transmission: 'Automatic', description: 'Experience luxury and performance with this elegant and powerful sedan.' },
+                    { name: 'Ford Endeavour', price: 4500, type: 'SUV', seats: 7, fuel: 'Diesel', transmission: 'Automatic', description: 'A powerful and robust SUV, ideal for long family journeys.' }
+                ];
 
-.chatbot-window.active {
-    display: flex;
-    transform: scale(1);
-    opacity: 1;
-}
-
-.chatbot-header {
-    padding: 1rem 1.2rem;
-    background: var(--primary);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.chatbot-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.4rem;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.2s;
-}
-
-.chatbot-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.chatbot-messages {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-    background: #f9fafb;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-.message {
-    max-width: 85%;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-    line-height: 1.5;
-    font-size: 0.92rem;
-    word-break: break-word;
-}
-
-.user-message {
-    align-self: flex-end;
-    background: var(--secondary);
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-
-.bot-message {
-    align-self: flex-start;
-    background: white;
-    border: 1px solid #eaeaea;
-    border-bottom-left-radius: 4px;
-    color: var(--dark);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.chatbot-input {
-    display: flex;
-    padding: 0.7rem;
-    background: white;
-    border-top: 1px solid #eaeaea;
-}
-
-.chatbot-input input {
-    flex: 1;
-    padding: 0.65rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 24px 0 0 24px;
-    outline: none;
-    font-size: 0.95rem;
-    font-family: inherit;
-}
-
-.chatbot-input button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    width: 42px;
-    border-radius: 0 24px 24px 0;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-}
-
-.chatbot-input button:hover {
-    background: #e55a2a;
-}
-
-/* ===== CENTER ON MOBILE PHONES ===== */
-@media (max-width: 768px) {
-    .chatbot-container {
-        bottom: unset;
-        right: unset;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none; /* Let clicks pass through until active */
-    }
-
-    .chatbot-toggle {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 10000;
-        pointer-events: auto;
-    }
-
-    .chatbot-window {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        bottom: unset;
-        right: unset;
-        transform: translate(-50%, -50%) scale(0.95);
-        width: 94%;
-        max-width: 360px;
-        height: 85vh;
-        max-height: 520px;
-        z-index: 10001;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-        border-radius: 18px;
-    }
-
-    .chatbot-window.active {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    .chatbot-header {
-        border-radius: 18px 18px 0 0;
-    }
-
-    /* Optional: Add backdrop overlay */
-    .chatbot-container::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(3px);
-        z-index: 10000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        pointer-events: none;
-    }
-
-    .chatbot-container.active-overlay::before {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-    }
-}
-/* ===== CHATBOT STYLES ===== */
-.chatbot-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    pointer-events: auto; /* always allow clicks */
-}
-
-.chatbot-toggle {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    font-size: 1.4rem;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.chatbot-toggle:hover {
-    transform: scale(1.1) rotate(15deg);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
-}
-
-.chatbot-window {
-    position: absolute;
-    bottom: 76px;
-    right: 0;
-    width: 340px;
-    height: 480px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0.95);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease-in-out;
-}
-
-.chatbot-window.active {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-}
-
-.chatbot-header {
-    padding: 1rem 1.2rem;
-    background: var(--primary);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.chatbot-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.4rem;
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.2s;
-}
-
-.chatbot-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.chatbot-messages {
-    flex: 1;
-    padding: 1rem;
-    overflow-y: auto;
-    background: #f9fafb;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-.message {
-    max-width: 85%;
-    padding: 0.75rem 1rem;
-    border-radius: 14px;
-    line-height: 1.5;
-    font-size: 0.92rem;
-    word-break: break-word;
-}
-
-.user-message {
-    align-self: flex-end;
-    background: var(--secondary);
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-
-.bot-message {
-    align-self: flex-start;
-    background: white;
-    border: 1px solid #eaeaea;
-    border-bottom-left-radius: 4px;
-    color: var(--dark);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.chatbot-input {
-    display: flex;
-    padding: 0.7rem;
-    background: white;
-    border-top: 1px solid #eaeaea;
-}
-
-.chatbot-input input {
-    flex: 1;
-    padding: 0.65rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 24px 0 0 24px;
-    outline: none;
-    font-size: 0.95rem;
-}
-
-.chatbot-input button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    width: 42px;
-    border-radius: 0 24px 24px 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.chatbot-input button:hover {
-    background: #e55a2a;
-}
-
-/* ===== MOBILE STYLES ===== */
-@media (max-width: 768px) {
-    .chatbot-window {
-        position: fixed;
-        bottom: unset;
-        right: unset;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.95);
-        width: 94%;
-        max-width: 360px;
-        height: 85vh;
-        max-height: 520px;
-        z-index: 10001;
-        border-radius: 18px;
-    }
-    .chatbot-window.active {
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-</style>
-
-<script>document.addEventListener('DOMContentLoaded', function() {
-    if (window.chatbotInitialized) return;
-    window.chatbotInitialized = true;
-
-    const container = document.querySelector('.chatbot-container');
-    const toggleBtn = container.querySelector('.chatbot-toggle');
-    const closeBtn = container.querySelector('.chatbot-close');
-    const chatWindow = container.querySelector('.chatbot-window');
-    const messagesContainer = document.getElementById('chatbot-messages');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-
-    const carsData = window.carsData || [];
-
-    // Toggle chat
-    toggleBtn.addEventListener('click', () => {
-        chatWindow.classList.toggle('active');
-        container.style.pointerEvents = chatWindow.classList.contains('active') ? 'auto' : 'auto';
-        userInput.focus();
-    });
-
-    // Close chat
-    closeBtn.addEventListener('click', () => {
-        chatWindow.classList.remove('active');
-        container.style.pointerEvents = 'auto';
-    });
-
-    // Send message
-    function sendMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-        appendMessage(text, 'user-message');
-        userInput.value = '';
-        setTimeout(() => {
-            appendMessage(getBotResponse(text), 'bot-message');
-        }, 500);
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    function appendMessage(text, cls) {
-        const div = document.createElement('div');
-        div.classList.add('message', cls);
-        div.innerHTML = text.replace(/\n/g, '<br>');
-        messagesContainer.appendChild(div);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function getBotResponse(input) {
-    input = input.toLowerCase();
-
-    // Greetings
-    if (input.includes('hello') || input.includes('hi') || input.includes('hey') || input.includes('namaste') || input.includes('salam')) {
-        return "Hello! 👋 Kaise ho? Main aapki car rental mein madad karne ke liye hoon.";
-    }
-
-    // About bot
-    if (input.includes('who are you') || input.includes('what are you') || input.includes('tum kaun ho')) {
-        return "Main Veloce bot hoon 🚗, aapka personal car rental assistant. Developed by Pratap.";
-    }
-
-    // Show all cars
-    if (input.includes('what cars') || input.includes('show me cars') || input.includes('kaun kaun si car') || input.includes('cars available')) {
-        if (carsData.length === 0) return "Sorry, abhi koi car available nahi hai.";
-        let list = "🚗 Abhi hamare paas ye cars available hain:\n";
-        carsData.forEach(car => {
-            list += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return list;
-    }
-
-    // Cheapest / budget cars
-    if (input.includes('cheap') || input.includes('budget') || input.includes('lowest price') || input.includes('sasti car') || input.includes('kam daam')) {
-        const sorted = [...carsData].sort((a, b) => a.price - b.price);
-        const top3 = sorted.slice(0, 3);
-        if (top3.length === 0) return "Abhi budget cars available nahi hain.";
-        let reply = "💰 Ye sabse budget-friendly options hain:\n";
-        top3.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
-
-    // Luxury / premium cars
-    if (input.includes('expensive') || input.includes('luxury') || input.includes('premium') || input.includes('mehngi car') || input.includes('top model')) {
-        const sorted = [...carsData].sort((a, b) => b.price - a.price);
-        const top3 = sorted.slice(0, 3);
-        if (top3.length === 0) return "Luxury cars abhi available nahi hain.";
-        let reply = "💎 Ye hamari premium luxury cars hain:\n";
-        top3.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
-
-    // Family cars (5+ seats)
-    if (input.includes('family') || input.includes('kids') || input.includes('children') || input.includes('badi car') || input.includes('7 seater')) {
-        const familyCars = carsData.filter(car => parseInt(car.seats) >= 5);
-        if (familyCars.length === 0) {
-            return "Sorry, family size car abhi available nahi hai.";
+            } catch (error) {
+                console.error("Failed to fetch car data:", error);
+                // Handle error gracefully, e.g., show a message to the user
+                appendMessage("Sorry, I'm having trouble fetching car data right now. Please try again later.", 'bot-message');
+            }
         }
-        let reply = "👨‍👩‍👧‍👦 Family ke liye ye cars sahi rahengi:\n";
-        familyCars.forEach(car => {
-            reply += `• ${car.name} (${car.seats} seats) - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
 
-    // Diesel cars
-    if (input.includes('diesel')) {
-        const dieselCars = carsData.filter(car => car.fuel.toLowerCase() === 'diesel');
-        if (dieselCars.length === 0) return "Diesel wali cars available nahi hain.";
-        let reply = "⛽ Diesel wali cars:\n";
-        dieselCars.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
+        // --- Event Listeners ---
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.toggle('active');
+            container.classList.toggle('active-overlay');
+            if (chatWindow.classList.contains('active')) {
+                userInput.focus();
+            }
         });
-        return reply;
-    }
 
-    // Petrol cars
-    if (input.includes('petrol')) {
-        const petrolCars = carsData.filter(car => car.fuel.toLowerCase() === 'petrol');
-        if (petrolCars.length === 0) return "Petrol wali cars available nahi hain.";
-        let reply = "⛽ Petrol wali cars:\n";
-        petrolCars.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('active');
+            container.classList.remove('active-overlay');
         });
-        return reply;
-    }
 
-    // Automatic cars
-    if (input.includes('automatic')) {
-        const autoCars = carsData.filter(car => car.transmission.toLowerCase().includes('automatic'));
-        if (autoCars.length === 0) return "Automatic cars abhi available nahi hain.";
-        let reply = "🎯 Automatic transmission cars:\n";
-        autoCars.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') sendMessage();
         });
-        return reply;
-    }
 
-    // Manual cars
-    if (input.includes('manual')) {
-        const manualCars = carsData.filter(car => car.transmission.toLowerCase().includes('manual'));
-        if (manualCars.length === 0) return "Manual cars abhi available nahi hain.";
-        let reply = "⚙️ Manual transmission cars:\n";
-        manualCars.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
-
-    // Search by car name
-    for (let car of carsData) {
-        if (input.includes(car.name.toLowerCase())) {
-            return `
-                <strong>${car.name}</strong>\n
-                💰 Price: ₹${car.price}/day\n
-                🛞 Type: ${car.type}\n
-                🪑 Seats: ${car.seats}\n
-                ⛽ Fuel: ${car.fuel}\n
-                🎯 Transmission: ${car.transmission}\n
-                ℹ️ ${car.description}
-            `;
+        // --- Message Handling Functions ---
+        function appendMessage(text, cls) {
+            const div = document.createElement('div');
+            div.classList.add('message', cls);
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
-    }
 
-    // If user asks for a specific unavailable car
-    if (input.includes("car") || input.includes("gadi") || input.includes("vehicle")) {
-        return "Sorry, wo car hamare list mein abhi available nahi hai  kripya model name se dekhe.";
-    }
-     if (input.includes("help") ) {
-        return "call +91-1234567890 for assistance. and support query avail bet 9:00 AM to 6:00 PM";
-    }
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('message', 'bot-message', 'typing-indicator');
+            typingDiv.innerHTML = '<span class="loading"></span>';
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return typingDiv;
+        }
 
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
 
-    // SUVs
-    if (input.includes('suv')) {
-        const suvs = carsData.filter(car => car.type.toLowerCase().includes('suv'));
-        if (suvs.length === 0) return "SUV cars available nahi hain.";
-        let reply = "🚙 Available SUVs:\n";
-        suvs.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
+            appendMessage(text, 'user-message');
+            userInput.value = '';
 
-    // Sedans
-    if (input.includes('sedan')) {
-        const sedans = carsData.filter(car => car.type.toLowerCase().includes('sedan'));
-        if (sedans.length === 0) return "Sedan cars available nahi hain.";
-        let reply = "🚘 Available Sedans:\n";
-        sedans.forEach(car => {
-            reply += `• ${car.name} - ₹${car.price}/day\n`;
-        });
-        return reply;
-    }
+            const typingIndicator = showTypingIndicator();
 
-    // Default response
-    return "Main aapko cars by price, type, seats, fuel ya transmission ke hisaab se dikhha sakta hoon. Try asking:\n• 'Sasti cars dikhao'\n• '7-seater chahiye'\n• 'Diesel car available hai?'\n• 'Tell me about Swift'";
-}}
-)
+            // Simulate bot processing time
+            setTimeout(() => {
+                const response = getBotResponse(text);
+                messagesContainer.removeChild(typingIndicator);
+                appendMessage(response, 'bot-message');
+            }, 800);
+        }
+
+        // --- Core Chatbot Logic ---
+        function getBotResponse(input) {
+            input = input.toLowerCase();
+
+            // Helper function to find a car by its name
+            const findCarByName = (query) => carsData.find(car => query.includes(car.name.toLowerCase()));
+
+            // Find car details if a car name is mentioned
+            const carDetails = findCarByName(input);
+            if (carDetails) {
+                return `
+                    <strong>${carDetails.name}</strong>\n
+                    💰 Price: ₹${carDetails.price}/day\n
+                    🛞 Type: ${carDetails.type}\n
+                    🪑 Seats: ${carDetails.seats}\n
+                    ⛽ Fuel: ${carDetails.fuel}\n
+                    🎯 Transmission: ${carDetails.transmission}\n
+                    ℹ️ ${carDetails.description}
+                `;
+            }
+
+            // Keyword-based responses
+            if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+                return "Hello! 👋 Kaise ho? Main aapki car rental mein madad karne ke liye hoon.";
+            }
+            if (input.includes('who are you') || input.includes('what are you')) {
+                return "Main Veloce bot hoon 🚗, aapka personal car rental assistant. Developed by Pratap.";
+            }
+            if (input.includes('what cars') || input.includes('show me cars') || input.includes('cars available')) {
+                return getCarList();
+            }
+            if (input.includes('cheap') || input.includes('budget') || input.includes('sasti')) {
+                return getCheapestCars();
+            }
+            if (input.includes('luxury') || input.includes('premium') || input.includes('expensive')) {
+                return getLuxuryCars();
+            }
+            if (input.includes('family') || input.includes('7 seater') || input.includes('badi car')) {
+                return getFamilyCars();
+            }
+            if (input.includes('diesel')) {
+                return getFilteredCars('fuel', 'diesel');
+            }
+            if (input.includes('petrol')) {
+                return getFilteredCars('fuel', 'petrol');
+            }
+            if (input.includes('automatic')) {
+                return getFilteredCars('transmission', 'automatic');
+            }
+            if (input.includes('manual')) {
+                return getFilteredCars('transmission', 'manual');
+            }
+            if (input.includes('suv')) {
+                return getFilteredCars('type', 'suv');
+            }
+            if (input.includes('sedan')) {
+                return getFilteredCars('type', 'sedan');
+            }
+            if (input.includes('help') || input.includes('support')) {
+                return "For assistance, please call us at **+91-1234567890** between 9:00 AM and 6:00 PM.";
+            }
+
+            // Default fallback
+            return "Sorry, I didn't understand that. You can ask me about:\n• Our cars\n• Cheapest or Luxury cars\n• Cars by type (SUV, Sedan) or features (Automatic, Diesel)";
+        }
+
+        // --- Helper Functions for Responses ---
+        function getCarList() {
+            if (carsData.length === 0) return "Sorry, no cars are available at the moment.";
+            let list = "🚗 Here are our currently available cars:\n";
+            carsData.forEach(car => {
+                list += `• ${car.name} - ₹${car.price}/day\n`;
+            });
+            return list;
+        }
+
+        function getCheapestCars() {
+            if (carsData.length === 0) return "No budget cars available right now.";
+            const sorted = [...carsData].sort((a, b) => a.price - b.price);
+            const top3 = sorted.slice(0, 3);
+            let reply = "💰 Our most budget-friendly options are:\n";
+            top3.forEach(car => {
+                reply += `• ${car.name} - ₹${car.price}/day\n`;
+            });
+            return reply;
+        }
+
+        function getLuxuryCars() {
+            if (carsData.length === 0) return "No luxury cars available right now.";
+            const sorted = [...carsData].sort((a, b) => b.price - a.price);
+            const top3 = sorted.slice(0, 3);
+            let reply = "💎 Here are our premium luxury cars:\n";
+            top3.forEach(car => {
+                reply += `• ${car.name} - ₹${car.price}/day\n`;
+            });
+            return reply;
+        }
+
+        function getFamilyCars() {
+            const familyCars = carsData.filter(car => parseInt(car.seats) >= 5);
+            if (familyCars.length === 0) {
+                return "Sorry, we don't have family-sized cars available at the moment.";
+            }
+            let reply = "👨‍👩‍👧‍👦 These cars are great for families:\n";
+            familyCars.forEach(car => {
+                reply += `• ${car.name} (${car.seats} seats) - ₹${car.price}/day\n`;
+            });
+            return reply;
+        }
+
+        function getFilteredCars(property, value) {
+            const filteredCars = carsData.filter(car => car[property].toLowerCase().includes(value));
+            if (filteredCars.length === 0) {
+                return `Sorry, we don't have any **${value}** cars right now.`;
+            }
+            let reply = `🚗 Here are the available **${value}** cars:\n`;
+            filteredCars.forEach(car => {
+                reply += `• ${car.name} - ₹${car.price}/day\n`;
+            });
+            return reply;
+        }
+
+        // Initialize the chatbot by fetching data
+        fetchCarsData();
+    });
 </script>
+
+</body>
+</html>
