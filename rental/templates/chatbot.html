@@ -1,6 +1,9 @@
 {% load static %}
 
 <!-- ===== CHATBOT ===== -->
+{% load static %}
+
+<!-- ===== CHATBOT ===== -->
 <div class="chatbot-container">
     <button class="chatbot-toggle" aria-label="Open chat">
         <i class="fas fa-robot"></i>
@@ -26,6 +29,7 @@
         </div>
     </div>
 </div>
+
 <style>
 /* ===== CHATBOT STYLES ===== */
 .chatbot-container {
@@ -250,60 +254,228 @@
         pointer-events: auto;
     }
 }
+/* ===== CHATBOT STYLES ===== */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: auto; /* always allow clicks */
+}
+
+.chatbot-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+.chatbot-window {
+    position: absolute;
+    bottom: 76px;
+    right: 0;
+    width: 340px;
+    height: 480px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.chatbot-window.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.chatbot-header {
+    padding: 1rem 1.2rem;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.chatbot-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.chatbot-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.message {
+    max-width: 85%;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    line-height: 1.5;
+    font-size: 0.92rem;
+    word-break: break-word;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: var(--secondary);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: white;
+    border: 1px solid #eaeaea;
+    border-bottom-left-radius: 4px;
+    color: var(--dark);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 0.7rem;
+    background: white;
+    border-top: 1px solid #eaeaea;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 24px 0 0 24px;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.chatbot-input button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    width: 42px;
+    border-radius: 0 24px 24px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chatbot-input button:hover {
+    background: #e55a2a;
+}
+
+/* ===== MOBILE STYLES ===== */
+@media (max-width: 768px) {
+    .chatbot-window {
+        position: fixed;
+        bottom: unset;
+        right: unset;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+        width: 94%;
+        max-width: 360px;
+        height: 85vh;
+        max-height: 520px;
+        z-index: 10001;
+        border-radius: 18px;
+    }
+    .chatbot-window.active {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Only initialize if not already initialized
+<script>document.addEventListener('DOMContentLoaded', function() {
     if (window.chatbotInitialized) return;
     window.chatbotInitialized = true;
 
-    const toggleBtn = document.querySelector('.chatbot-toggle');
-    const closeBtn = document.querySelector('.chatbot-close');
-    const chatWindow = document.querySelector('.chatbot-window');
+    const container = document.querySelector('.chatbot-container');
+    const toggleBtn = container.querySelector('.chatbot-toggle');
+    const closeBtn = container.querySelector('.chatbot-close');
+    const chatWindow = container.querySelector('.chatbot-window');
     const messagesContainer = document.getElementById('chatbot-messages');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
 
-    // Get cars data from global window variable (set in parent template)
     const carsData = window.carsData || [];
 
-    // Toggle chat window
+    // Toggle chat
     toggleBtn.addEventListener('click', () => {
         chatWindow.classList.toggle('active');
-        if (chatWindow.classList.contains('active')) {
-            userInput.focus();
-        }
+        container.style.pointerEvents = chatWindow.classList.contains('active') ? 'auto' : 'auto';
+        userInput.focus();
     });
 
+    // Close chat
     closeBtn.addEventListener('click', () => {
         chatWindow.classList.remove('active');
+        container.style.pointerEvents = 'auto';
     });
 
-    // Send message on button click or Enter key
+    // Send message
     function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
-
         appendMessage(text, 'user-message');
         userInput.value = '';
-
         setTimeout(() => {
-            const response = getBotResponse(text);
-            appendMessage(response, 'bot-message');
-        }, 600);
+            appendMessage(getBotResponse(text), 'bot-message');
+        }, 500);
     }
 
     sendBtn.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', (e) => {
+    userInput.addEventListener('keypress', e => {
         if (e.key === 'Enter') sendMessage();
     });
 
-    function appendMessage(text, className) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', className);
-        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
-        messagesContainer.appendChild(messageDiv);
+    function appendMessage(text, cls) {
+        const div = document.createElement('div');
+        div.classList.add('message', cls);
+        div.innerHTML = text.replace(/\n/g, '<br>');
+        messagesContainer.appendChild(div);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
